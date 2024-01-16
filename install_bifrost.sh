@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 cd bifrost
-mkdir build
+mkdir -p build
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=.
 make

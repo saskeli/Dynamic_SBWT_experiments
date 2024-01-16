@@ -3,7 +3,7 @@ set -euxo pipefail
 
 git submodule update --init --recursive
 cd sshash
-mkdir build
+mkdir -p build
 cd build
 cmake ..
 make -j
