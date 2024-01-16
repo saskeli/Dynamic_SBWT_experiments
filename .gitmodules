@@ -7,3 +7,6 @@
 [submodule "dynboss"]
 	path = dynboss
 	url = https://github.com/baharpan/dynboss.git
+[submodule "SBWT"]
+	path = SBWT
+	url = https://github.com/algbio/SBWT.git
