@@ -4,6 +4,6 @@ set -euo pipefail
 cd bifrost
 mkdir build
 cd build
-cmake ..
+cmake .. -DCMAKE_INSTALL_PREFIX=.
 make
-sudo make install
+make install
