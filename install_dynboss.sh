@@ -1,3 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+
 git submodule update --init --recursive
 cd dynboss
 cd dsk-1.6906
