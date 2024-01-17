@@ -2,9 +2,7 @@ from util import run_cmd, measure_time
 import os
 
 def build(fasta_file, k):
-    basename = fasta_file
-    if fasta_file.endswith(".gz"):
-        basename = fasta_file[:-3]
+    basename = os.path.basename(fasta_file)
     count_file = basename + ".solid_kmers_binary"
     packed_file = count_file + ".packed"
     time1, mem1 = measure_time(f"./dynboss/dsk-1.6906/dsk {fasta_file} {k}")
@@ -13,9 +11,7 @@ def build(fasta_file, k):
     return time1 + time2 + time3, mem1 + mem2 + mem3
 
 def clean(fasta_file):
-    basename = fasta_file
-    if fasta_file.endswith(".gz"):
-        basename = fasta_file[:-3]
+    basename = os.path.basename(fasta_file)
     count_file = basename + ".solid_kmers_binary"
     packed_file = count_file + ".packed"
     graph_file = packed_file + ".dbg"
