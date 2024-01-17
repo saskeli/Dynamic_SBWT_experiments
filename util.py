@@ -33,5 +33,5 @@ def measure_time(command):
         .stderr.decode("utf-8")
         .strip()
     )
-    (time_s, mem_kb) = result.splitlines()[-1].split()
+    time_s, mem_kb = result.splitlines()[-1].split()
     return float(time_s), int(mem_kb)
