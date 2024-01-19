@@ -1,6 +1,7 @@
 # Adapted from https://github.com/jnalanko/SBWT_experiments/blob/master/setup.py
 
 import subprocess
+import struct
 import sys
 import os
 
@@ -35,3 +36,12 @@ def measure_time(command):
     )
     time_s, mem_kb = result.splitlines()[-1].split()
     return float(time_s), int(mem_kb)
+
+
+def get_filesize(filename):
+    if filename.endswith(".gz"):
+        with open(filename, 'rb') as f:
+            f.seek(-4, 2)
+            return struct.unpack('I', f.read(4))[0]
+    else:
+        return os.path.getsize(filename)
