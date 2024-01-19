@@ -1,5 +1,6 @@
-from util import run_cmd, measure_time
+from util import measure_time
 import os
+
 
 def build(fasta_file, k):
     basename = os.path.basename(fasta_file)
@@ -9,6 +10,7 @@ def build(fasta_file, k):
     time2, mem2 = measure_time(f"./dynboss/bin/cosmo-pack {count_file}")
     time3, mem3 = measure_time(f"./dynboss/bin/dynamicBOSS build -p {packed_file}")
     return time1 + time2 + time3, mem1 + mem2 + mem3
+
 
 def clean(fasta_file):
     basename = os.path.basename(fasta_file)
