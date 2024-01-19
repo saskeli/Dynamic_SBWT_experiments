@@ -6,6 +6,9 @@ sudo apt update
 # bifrost
 sudo apt install -y build-essential cmake zlib1g-dev
 
+# cbl
+sudo apt install -y libstdc++-12-dev libclang-dev
+
 # dynboss
 sudo apt install -y libboost-all-dev libtclap-dev libsdsl-dev
 
