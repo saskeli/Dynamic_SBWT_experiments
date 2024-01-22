@@ -24,14 +24,18 @@ def run_cmd(command, timeout=None):
             text=True,
             env=ENV,
         )
-        out, err = proc.stdout.strip(), proc.stderr.strip()
-        sys.stdout.write(out + "\n")
-        sys.stderr.write(err + "\n")
+        out, err = proc.stdout, proc.stderr
+        if out is not None:
+            sys.stdout.write(out + "\n")
+        if err is not None:
+            sys.stderr.write(err + "\n")
         return out, err
     except subprocess.SubprocessError as proc:
-        out, err = proc.stdout.strip(), proc.stderr.strip()
-        sys.stdout.write(out + "\n")
-        sys.stderr.write(err + "\n")
+        out, err = proc.stdout, proc.stderr
+        if out is not None:
+            sys.stdout.write(out + "\n")
+        if err is not None:
+            sys.stderr.write(err + "\n")
         return None, None
 
 
