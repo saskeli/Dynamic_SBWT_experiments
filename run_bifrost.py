@@ -16,6 +16,24 @@ def build(fasta_file, k):
     )
 
 
+def query(indexed_file, query_file):
+    prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
+    gfa_file = prefix + ".gfa.gz"
+    updated_prefix = f"{prefix}_query_{get_basename(query_file)}"
+    return measure_time(
+        f"./bifrost/build/bin/Bifrost query -g {gfa_file} -q {query_file} -o {updated_prefix} -t 1"
+    )
+
+
+def insert(indexed_file, query_file):
+    prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
+    gfa_file = prefix + ".gfa.gz"
+    updated_prefix = f"{prefix}_add_{get_basename(query_file)}"
+    return measure_time(
+        f"./bifrost/build/bin/Bifrost update -g {gfa_file} -r {query_file} -o {updated_prefix} -t 1"
+    )
+
+
 def clean(fasta_file):
     prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
     gfa_file = prefix + ".gfa.gz"
