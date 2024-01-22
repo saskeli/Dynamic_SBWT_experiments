@@ -6,7 +6,7 @@ def build(fasta_file, k, m=20):
     basename = os.path.basename(fasta_file)
     sshash_file = basename + ".sshash"
     return measure_time(
-        f"./sshash/build/sshash build -i {fasta_file} -k {k} -m {m} -o {sshash_file} -d tmp"
+        f"./sshash/build/sshash build -i {fasta_file} -o {sshash_file} -k {k} -m {m} -d tmp"
     )
 
 
