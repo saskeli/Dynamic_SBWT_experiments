@@ -3,6 +3,7 @@ import os
 
 
 def build(fasta_file, k, m=20):
+    os.makedirs(OUT_FOLDER, exist_ok=True)
     prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
     sshash_file = prefix + ".sshash"
     return measure_time(

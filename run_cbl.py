@@ -3,6 +3,7 @@ import os
 
 
 def build(fasta_file, k):
+    os.makedirs(OUT_FOLDER, exist_ok=True)
     prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
     cbl_file = prefix + ".cbl"
     run_cmd(f"K={k} cd CBL && cargo +nightly build --release --examples")

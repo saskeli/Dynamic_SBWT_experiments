@@ -3,6 +3,7 @@ import os
 
 
 def build(fasta_file, k):
+    os.makedirs(OUT_FOLDER, exist_ok=True)
     prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
     count_file = prefix + ".solid_kmers_binary"
     packed_file = prefix + ".packed"

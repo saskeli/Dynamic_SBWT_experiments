@@ -9,6 +9,7 @@ else:
 
 
 def build(fasta_file, k):
+    os.makedirs(OUT_FOLDER, exist_ok=True)
     prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
     return measure_time(
         f"./bifrost/build/bin/Bifrost build -r {fasta_file} -o {prefix} -k {k} -t 1"
