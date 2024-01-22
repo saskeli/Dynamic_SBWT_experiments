@@ -44,7 +44,14 @@ def measure_time(command, timeout=TIMEOUT):
         time_s, mem_kb = err.splitlines()[-1].split()
         return float(time_s), int(mem_kb)
     except Exception:
-        return None, None
+        return float("inf"), float("inf")
+
+
+def get_basename(filename):
+    basename = os.path.basename(filename)
+    if basename.endswith(".gz"):
+        return basename[:-3]
+    return basename
 
 
 def get_filesize(filename):

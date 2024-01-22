@@ -1,4 +1,4 @@
-from util import measure_time, ENV
+from util import *
 import os
 
 BIFROST_LIB = os.path.abspath("bifrost/build/lib")
@@ -9,16 +9,14 @@ else:
 
 
 def build(fasta_file, k):
-    basename = os.path.basename(fasta_file)
-    prefix = basename + ".bifrost"
+    prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
     return measure_time(
         f"./bifrost/build/bin/Bifrost build -r {fasta_file} -o {prefix} -k {k} -t 1"
     )
 
 
 def clean(fasta_file):
-    basename = os.path.basename(fasta_file)
-    prefix = basename + ".bifrost"
+    prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
     gfa_file = prefix + ".gfa.gz"
     bfi_file = prefix + ".bfi"
     os.remove(gfa_file)
