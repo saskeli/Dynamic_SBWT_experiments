@@ -1,1 +1,8 @@
 .DS_Store
+*.fa
+*.gz
+*.cbl
+*.sshash
+*.sbwt
+*.bfi
+*.solid_kmers_binary
