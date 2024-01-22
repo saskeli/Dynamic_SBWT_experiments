@@ -21,6 +21,14 @@ def count(indexed_file):
     return int(out)
 
 
+def query(indexed_file, query_file):
+    prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
+    cbl_file = prefix + ".cbl"
+    return measure_time(
+        f"./CBL/target/release/examples/query_index {cbl_file} {query_file}"
+    )
+
+
 def insert(indexed_file, query_file):
     prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
     cbl_file = prefix + ".cbl"
