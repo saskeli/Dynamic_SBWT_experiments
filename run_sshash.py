@@ -11,6 +11,14 @@ def build(fasta_file, k, m=20):
     )
 
 
+def query(indexed_file, query_file):
+    prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
+    sshash_file = prefix + ".sshash"
+    return measure_time(
+        f"./sshash/build/sshash build -i {sshash_file} -o {query_file}"
+    )
+
+
 def clean(fasta_file):
     prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
     sshash_file = prefix + ".sshash"
