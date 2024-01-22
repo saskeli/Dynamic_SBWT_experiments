@@ -1,6 +1,7 @@
 data
 out
 tmp
+__pycache__
 .DS_Store
 *.fa
 *.gz
