@@ -11,6 +11,17 @@ def build(fasta_file, k):
     )
 
 
+def count(fasta_file, k):
+    basename = os.path.basename(fasta_file)
+    cbl_file = basename + ".cbl"
+    run_cmd(f"K={k} cd CBL && cargo +nightly build --release --examples")
+    return int(
+        run_cmd(
+            f"./CBL/target/release/examples/index_count {cbl_file} 2>&1 | tail -n 1 | cut -d ' ' -f 3"
+        )
+    )
+
+
 def clean(fasta_file):
     basename = os.path.basename(fasta_file)
     cbl_file = basename + ".cbl"
