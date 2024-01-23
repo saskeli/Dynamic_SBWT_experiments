@@ -21,6 +21,15 @@ def count(indexed_file):
     return int(out)
 
 
+def count_query(indexed_file, query_file):
+    prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
+    cbl_file = prefix + ".cbl"
+    out, _ = run_cmd(
+        f"./CBL/target/release/examples/query_index {cbl_file} {query_file} 2>&1 | tail -n 2 | head -n 1 | cut -d ' ' -f 3"
+    )
+    return int(out)
+
+
 def query(indexed_file, query_file):
     prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
     cbl_file = prefix + ".cbl"
