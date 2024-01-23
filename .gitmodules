@@ -13,3 +13,6 @@
 [submodule "CBL"]
 	path = CBL
 	url = https://github.com/imartayan/CBL.git
+[submodule "bufboss"]
+	path = bufboss
+	url = https://github.com/jnalanko/bufboss.git
