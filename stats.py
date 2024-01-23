@@ -2,6 +2,7 @@ from util import *
 import os
 import json
 import run_bifrost
+import run_bufboss
 import run_cbl
 import run_dynboss
 import run_sbwt
@@ -18,6 +19,7 @@ def build_filename(prefix, fasta_file):
 
 
 def build_stats(fasta_file, k):
+    os.makedirs(DATA_FOLDER, exist_ok=True)
     output = build_filename("build", fasta_file)
     data = {"file": fasta_file}
     time, mem = run_cbl.build(fasta_file, k)
@@ -28,6 +30,8 @@ def build_stats(fasta_file, k):
     data["SBWT"] = {"time": time, "mem": mem}
     time, mem = run_bifrost.build(fasta_file, k)
     data["Bifrost"] = {"time": time, "mem": mem}
+    time, mem = run_bufboss.build(fasta_file, k)
+    data["BufBOSS"] = {"time": time, "mem": mem}
     time, mem = run_dynboss.build(fasta_file, k)
     data["DynamicBOSS"] = {"time": time, "mem": mem}
     data["k"] = k
@@ -45,6 +49,7 @@ def query_filename(prefix, indexed_file, query_file):
 
 
 def query_self_stats(fasta_file):
+    os.makedirs(DATA_FOLDER, exist_ok=True)
     output = query_filename("query_self", fasta_file, fasta_file)
     data = {"file": fasta_file}
     time, mem = run_cbl.query(fasta_file, fasta_file)
@@ -55,6 +60,8 @@ def query_self_stats(fasta_file):
     data["SBWT"] = {"time": time, "mem": mem}
     time, mem = run_bifrost.query(fasta_file, fasta_file)
     data["Bifrost"] = {"time": time, "mem": mem}
+    time, mem = run_bufboss.query(fasta_file, fasta_file)
+    data["BufBOSS"] = {"time": time, "mem": mem}
     time, mem = run_dynboss.query(fasta_file, fasta_file)
     data["DynamicBOSS"] = {"time": time, "mem": mem}
     data["kmers"] = run_cbl.count(fasta_file)
