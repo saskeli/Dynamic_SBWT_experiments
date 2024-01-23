@@ -15,7 +15,7 @@ def build(fasta_file, k):
 
 def query(indexed_file, query_file):
     prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
-    dbg_file = packed_file + ".packed" + ".dbg"
+    dbg_file = prefix + ".packed" + ".dbg"
     if query_file.endswith(".gz"):
         unzipped_file = f"{OUT_FOLDER}/{get_basename(query_file)}"
         run_cmd(f"gzip -cd {query_file} > {unzipped_file}")
@@ -25,7 +25,7 @@ def query(indexed_file, query_file):
 
 def insert(indexed_file, query_file):
     prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
-    dbg_file = packed_file + ".packed" + ".dbg"
+    dbg_file = prefix + ".packed" + ".dbg"
     if query_file.endswith(".gz"):
         unzipped_file = f"{OUT_FOLDER}/{get_basename(query_file)}"
         run_cmd(f"gzip -cd {query_file} > {unzipped_file}")
@@ -35,7 +35,7 @@ def insert(indexed_file, query_file):
 
 def remove(indexed_file, query_file):
     prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
-    dbg_file = packed_file + ".packed" + ".dbg"
+    dbg_file = prefix + ".packed" + ".dbg"
     if query_file.endswith(".gz"):
         unzipped_file = f"{OUT_FOLDER}/{get_basename(query_file)}"
         run_cmd(f"gzip -cd {query_file} > {unzipped_file}")
