@@ -9,7 +9,7 @@ import os
 GNU_TIME = "/usr/bin/time"
 ENV = os.environ.copy()
 OUT_FOLDER = "out"
-TIMEOUT = 120
+TIMEOUT = 60
 
 
 def run_cmd(command, timeout=None):
@@ -32,9 +32,13 @@ def run_cmd(command, timeout=None):
         return out, err
     except subprocess.SubprocessError as proc:
         out, err = proc.stdout, proc.stderr
-        if out is not None:
+        if isinstance(out, bytes):
+            out = out.decode("utf-8")
+        if isinstance(out, str):
             sys.stdout.write(out + "\n")
-        if err is not None:
+        if isinstance(err, bytes):
+            err = err.decode("utf-8")
+        if isinstance(err, str):
             sys.stderr.write(err + "\n")
         return None, None
 
