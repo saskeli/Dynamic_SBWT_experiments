@@ -22,7 +22,7 @@ def query(indexed_file, query_file):
         unzipped_file = f"{OUT_FOLDER}/{get_basename(query_file)}"
         run_cmd(f"gzip -cd {query_file} > {unzipped_file}")
         query_file = unzipped_file
-    return measure_time(f"./bufboss/bin/bufboss_query -i {bufboss_folder} -q {query_file}")
+    return measure_time(f"./bufboss/bin/bufboss_query -i {bufboss_folder} -q {query_file} -o /dev/null")
 
 
 def clean(fasta_file):
