@@ -31,7 +31,7 @@ def build_stats(fasta_file, k):
     time, mem = run_dynboss.build(fasta_file, k)
     data["DynamicBOSS"] = {"time": time, "mem": mem}
     data["k"] = k
-    data["kmers"] = run_cbl.count(fasta_file, k)
+    data["kmers"] = run_cbl.count(fasta_file)
     data["bytes"] = get_filesize(fasta_file)
     with open(output, "w+") as f:
         json.dump(data, f)
