@@ -10,3 +10,6 @@
 [submodule "SBWT"]
 	path = SBWT
 	url = https://github.com/algbio/SBWT.git
+[submodule "CBL"]
+	path = CBL
+	url = https://github.com/imartayan/CBL.git
