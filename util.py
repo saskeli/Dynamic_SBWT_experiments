@@ -9,7 +9,6 @@ import os
 GNU_TIME = "/usr/bin/time"
 ENV = os.environ.copy()
 OUT_FOLDER = "out"
-TIMEOUT = 60
 
 
 def run_cmd(command, timeout=None):
@@ -43,7 +42,7 @@ def run_cmd(command, timeout=None):
         return None, None
 
 
-def measure_time(command, timeout=TIMEOUT):
+def measure_time(command, timeout=None):
     """
     Measure time (in s) and memory usage (in KB) of a command
     """
