@@ -88,6 +88,7 @@ def query_other_stats(indexed_file, query_file):
     # data["DynamicBOSS"] = {"time": time, "mem": mem}
     data["kmers"] = run_cbl.count(indexed_file)
     data["bytes"] = get_filesize(indexed_file)
+    data["query_kmers"] = run_cbl.count_query(indexed_file, query_file)
     data["query_bytes"] = get_filesize(query_file)
     with open(output, "w+") as f:
         json.dump(data, f)
