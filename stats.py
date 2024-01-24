@@ -5,6 +5,7 @@ import run_bifrost
 import run_bufboss
 import run_cbl
 import run_dynboss
+import run_hashset
 import run_sbwt
 import run_sshash
 
@@ -48,6 +49,8 @@ def build_stats(fasta_file, k):
     data["BufBOSS"] = {"time": time, "mem": mem}
     time, mem = run_dynboss.build(fasta_file, k)
     data["DynamicBOSS"] = {"time": time, "mem": mem}
+    time, mem = run_hashset.build(fasta_file, k)
+    data["HashSet"] = {"time": time, "mem": mem}
     data["k"] = k
     data["kmers"] = run_cbl.count(fasta_file)
     data["bytes"] = get_filesize(fasta_file)
@@ -100,6 +103,8 @@ def query_other_stats(indexed_file, query_file):
     data["BufBOSS"] = {"time": time, "mem": mem}
     # time, mem = run_dynboss.query(indexed_file, query_file)
     # data["DynamicBOSS"] = {"time": time, "mem": mem}
+    time, mem = run_hashset.query(indexed_file, query_file)
+    data["HashSet"] = {"time": time, "mem": mem}
     data["kmers"] = run_cbl.count(indexed_file)
     data["bytes"] = get_filesize(indexed_file)
     data["query_kmers"] = run_cbl.count_query(indexed_file, query_file)
@@ -120,6 +125,8 @@ def insert_stats(indexed_file, query_file):
     data["BufBOSS"] = {"time": time, "mem": mem}
     # time, mem = run_dynboss.insert(indexed_file, query_file)
     # data["DynamicBOSS"] = {"time": time, "mem": mem}
+    time, mem = run_hashset.insert(indexed_file, query_file)
+    data["HashSet"] = {"time": time, "mem": mem}
     data["kmers"] = run_cbl.count(indexed_file)
     data["bytes"] = get_filesize(indexed_file)
     data["query_kmers"] = run_cbl.count_query(indexed_file, query_file)
@@ -138,6 +145,8 @@ def remove_stats(indexed_file, query_file):
     data["BufBOSS"] = {"time": time, "mem": mem}
     # time, mem = run_dynboss.remove(indexed_file, query_file)
     # data["DynamicBOSS"] = {"time": time, "mem": mem}
+    time, mem = run_hashset.remove(indexed_file, query_file)
+    data["HashSet"] = {"time": time, "mem": mem}
     data["kmers"] = run_cbl.count(indexed_file)
     data["bytes"] = get_filesize(indexed_file)
     data["query_kmers"] = run_cbl.count_query(indexed_file, query_file)
