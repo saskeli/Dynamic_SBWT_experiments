@@ -29,6 +29,26 @@ MARKER = {
 }
 LABEL = {t: t for t in MARKER}
 LABEL["DynamicBOSS"] = "DynBOSS"
+LABEL["build"] = {
+    "time": "Construction time (in s)",
+    "mem": "RAM usage during construction (in MB)",
+}
+LABEL["query_self"] = {
+    "time": "Time for positive queries (in s)",
+    "mem": "RAM usage for positive queries (in MB)",
+}
+LABEL["query_other"] = {
+    "time": "Time for random queries (in s)",
+    "mem": "RAM usage for random queries (in MB)",
+}
+LABEL["insert"] = {
+    "time": "Time for insertions (in s)",
+    "mem": "RAM usage for insertions (in MB)",
+}
+LABEL["remove"] = {
+    "time": "Time for deletions (in s)",
+    "mem": "RAM usage for deletions (in MB)",
+}
 
 for filename in DATA_FILES:
     if filename.endswith(".json"):
@@ -78,7 +98,7 @@ def plot_time_kmers(task):
         ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
-    ax.set_ylabel("Construction time (in s)")
+    ax.set_ylabel(LABEL[task]["time"])
     ax.set_xlabel("# k-mers")
     ax.legend(
         loc="lower center",
@@ -100,7 +120,7 @@ def plot_ram_kmers(task):
         ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
-    ax.set_ylabel("RAM usage during construction (in MB)")
+    ax.set_ylabel(LABEL[task]["mem"])
     ax.set_xlabel("# k-mers")
     ax.legend(
         loc="lower center",
