@@ -2,6 +2,7 @@ from stats import DATA_FOLDER
 from matplotlib import pyplot as plt
 import os
 import json
+import shutil
 
 
 PLOT_FOLDER = "plot"
@@ -136,3 +137,4 @@ if __name__ == "__main__":
         plot_time_bytes(task)
         plot_time_kmers(task)
         plot_ram_kmers(task)
+    shutil.make_archive(PLOT_FOLDER, "zip", PLOT_FOLDER)
