@@ -1,9 +1,9 @@
-from util import TIMEOUT
+import util
 import stats
 
 
 K = 31
-TIMEOUT = 300
+util.TIMEOUT = 300
 
 BUILD = [
     "../files_1801-1900_31/SRR972708.unitigs.fa.gz",
