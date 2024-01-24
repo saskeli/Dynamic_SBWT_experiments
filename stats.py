@@ -12,6 +12,20 @@ import run_sshash
 DATA_FOLDER = "data"
 
 
+def update_data(json_file, key, value):
+    os.makedirs(DATA_FOLDER, exist_ok=True)
+    if os.path.exists(json_file):
+        with open(json_file, "r") as f:
+            data = json.load(f)
+        data[key] = value
+        with open(json_file, "w") as f:
+            json.dump(data, f)
+    else:
+        data = {key: value}
+        with open(json_file, "w+") as f:
+            json.dump(data, f)
+
+
 def build_filename(prefix, fasta_file):
     basename = get_basename(fasta_file)
     size = get_filesize(fasta_file)
