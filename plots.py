@@ -92,12 +92,15 @@ def plot_time_bytes(task):
     plt.rcParams.update({"font.size": FONT_SIZE})
     fig, ax = plt.subplots()
     for tool in TOOLS[task]:
-        X = [d[xkey] for d in DATA[task]]
-        Y = [d[tool]["time"] for d in DATA[task]]
+        X, Y = [], []
+        for d in DATA[task]:
+            if tool in d:
+                X.append(d[xkey])
+                Y.append(d[tool]["time"])
         ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
-    ax.set_ylabel("Construction time (in s)")
+    ax.set_ylabel(LABEL[task]["time"])
     ax.set_xlabel(LABEL[task][xkey])
     ax.legend(
         loc="lower center",
@@ -114,8 +117,11 @@ def plot_time_kmers(task):
     plt.rcParams.update({"font.size": FONT_SIZE})
     fig, ax = plt.subplots()
     for tool in TOOLS[task]:
-        X = [d[xkey] for d in DATA[task]]
-        Y = [d[tool]["time"] for d in DATA[task]]
+        X, Y = [], []
+        for d in DATA[task]:
+            if tool in d:
+                X.append(d[xkey])
+                Y.append(d[tool]["time"])
         ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
@@ -136,8 +142,11 @@ def plot_ram_kmers(task):
     plt.rcParams.update({"font.size": FONT_SIZE})
     fig, ax = plt.subplots()
     for tool in TOOLS[task]:
-        X = [d[xkey] for d in DATA[task]]
-        Y = [d[tool]["mem"] / 1000 for d in DATA[task]]
+        X, Y = [], []
+        for d in DATA[task]:
+            if tool in d:
+                X.append(d[xkey])
+                Y.append(d[tool]["mem"])
         ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
@@ -158,8 +167,11 @@ def plot_size_kmers():
     plt.rcParams.update({"font.size": FONT_SIZE})
     fig, ax = plt.subplots()
     for tool in TOOLS["size"]:
-        X = [d[xkey] for d in DATA["build"]]
-        Y = [d[tool]["size"] for d in DATA["build"]]
+        X, Y = [], []
+        for d in DATA["build"]:
+            if tool in d:
+                X.append(d[xkey])
+                Y.append(d[tool]["size"])
         ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
