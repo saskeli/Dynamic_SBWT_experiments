@@ -13,3 +13,4 @@ __pycache__
 *.solid_kmers_binary
 *.tsv
 *.log
+*.errlog
