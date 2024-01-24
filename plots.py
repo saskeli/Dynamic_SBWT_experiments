@@ -34,31 +34,31 @@ LABEL["build"] = {
     "time": "Construction time (in s)",
     "mem": "RAM usage during construction (in MB)",
     "bytes": "Input size (in bytes)",
-    "kmers": "# k-mers",
+    "kmers": "# $k$-mers",
 }
 LABEL["query_self"] = {
     "time": "Time for positive queries (in s)",
     "mem": "RAM usage for positive queries (in MB)",
     "bytes": "Query size (in bytes)",
-    "kmers": "# queried k-mers",
+    "kmers": "# queried $k$-mers",
 }
 LABEL["query_other"] = {
     "time": "Time for random queries (in s)",
     "mem": "RAM usage for random queries (in MB)",
     "query_bytes": "Query size (in bytes)",
-    "query_kmers": "# queried k-mers",
+    "query_kmers": "# queried $k$-mers",
 }
 LABEL["insert"] = {
     "time": "Time for insertions (in s)",
-    "mem": "RAM usage for insertions (in MB)",
+    "mem": "RAM usage during insertions (in MB)",
     "query_bytes": "Query size (in bytes)",
-    "query_kmers": "# queried k-mers",
+    "query_kmers": "# inserted $k$-mers",
 }
 LABEL["remove"] = {
     "time": "Time for deletions (in s)",
-    "mem": "RAM usage for deletions (in MB)",
+    "mem": "RAM usage during deletions (in MB)",
     "query_bytes": "Query size (in bytes)",
-    "query_kmers": "# queried k-mers",
+    "query_kmers": "# deleted $k$-mers",
 }
 
 
