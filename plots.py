@@ -27,6 +27,8 @@ MARKER = {
     "BufBOSS": "D",
     "DynamicBOSS": "X",
 }
+LABEL = {t: t for t in MARKER}
+LABEL["DynamicBOSS"] = "DynBOSS"
 
 for filename in DATA_FILES:
     if filename.endswith(".json"):
@@ -51,12 +53,16 @@ def plot_time_bytes(task):
     for tool in TOOLS[task]:
         X = [d[xkey] for d in DATA[task]]
         Y = [d[tool]["time"] for d in DATA[task]]
-        ax.scatter(X, Y, label=tool, marker=MARKER[tool], alpha=0.5)
+        ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_ylabel("Construction time (in s)")
     ax.set_xlabel("Input size (in bytes)")
-    ax.legend()
+    ax.legend(
+        loc="lower center",
+        bbox_to_anchor=(0.5, 1.025),
+        ncol=min(3, len(TOOLS[task])),
+    )
     os.makedirs(PLOT_FOLDER, exist_ok=True)
     plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
 
@@ -69,12 +75,16 @@ def plot_time_kmers(task):
     for tool in TOOLS[task]:
         X = [d[xkey] for d in DATA[task]]
         Y = [d[tool]["time"] for d in DATA[task]]
-        ax.scatter(X, Y, label=tool, marker=MARKER[tool], alpha=0.5)
+        ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_ylabel("Construction time (in s)")
     ax.set_xlabel("# k-mers")
-    ax.legend()
+    ax.legend(
+        loc="lower center",
+        bbox_to_anchor=(0.5, 1.025),
+        ncol=min(3, len(TOOLS[task])),
+    )
     os.makedirs(PLOT_FOLDER, exist_ok=True)
     plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
 
@@ -87,12 +97,16 @@ def plot_ram_kmers(task):
     for tool in TOOLS[task]:
         X = [d[xkey] for d in DATA[task]]
         Y = [d[tool]["mem"] / 1000 for d in DATA[task]]
-        ax.scatter(X, Y, label=tool, marker=MARKER[tool], alpha=0.5)
+        ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_ylabel("RAM usage during construction (in MB)")
     ax.set_xlabel("# k-mers")
-    ax.legend()
+    ax.legend(
+        loc="lower center",
+        bbox_to_anchor=(0.5, 1.025),
+        ncol=min(3, len(TOOLS[task])),
+    )
     os.makedirs(PLOT_FOLDER, exist_ok=True)
     plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
 
