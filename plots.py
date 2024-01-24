@@ -14,11 +14,11 @@ QUERY_TASKS = ["query_other", "insert", "remove"]
 TASKS = SINGLE_TASKS + QUERY_TASKS
 DATA = {task: [] for task in TASKS}
 TOOLS = {
-    "build": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "DynamicBOSS"],
-    "query_self": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS"],
-    "query_other": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS"],
-    "insert": ["CBL", "Bifrost", "BufBOSS"],
-    "remove": ["CBL", "BufBOSS"],
+    "build": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "DynamicBOSS", "HashSet"],
+    "query_self": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "HashSet"],
+    "query_other": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "HashSet"],
+    "insert": ["CBL", "Bifrost", "BufBOSS", "HashSet"],
+    "remove": ["CBL", "BufBOSS", "HashSet"],
 }
 MARKER = {
     "CBL": "o",
@@ -27,6 +27,7 @@ MARKER = {
     "Bifrost": "P",
     "BufBOSS": "D",
     "DynamicBOSS": "X",
+    "HashSet": "^",
 }
 LABEL = {t: t for t in MARKER}
 LABEL["DynamicBOSS"] = "DynBOSS"
