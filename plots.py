@@ -15,6 +15,7 @@ TASKS = SINGLE_TASKS + QUERY_TASKS
 DATA = {task: [] for task in TASKS}
 TOOLS = {
     "build": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "DynamicBOSS", "HashSet"],
+    "size": ["CBL", "SSHash", "SBWT", "Bifrost", "DynamicBOSS", "HashSet"],
     "query_self": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "HashSet"],
     "query_other": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "HashSet"],
     "insert": ["CBL", "Bifrost", "BufBOSS", "HashSet"],
@@ -34,6 +35,7 @@ LABEL["DynamicBOSS"] = "DynBOSS"
 LABEL["build"] = {
     "time": "Construction time (in s)",
     "mem": "RAM usage during construction (in MB)",
+    "size": "Index size on disk (in bytes)",
     "bytes": "Input size (in bytes)",
     "kmers": "# $k$-mers",
 }
@@ -150,9 +152,32 @@ def plot_ram_kmers(task):
     plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
 
 
+def plot_size_kmers():
+    xkey = "kmers"
+    prefix = f"{PLOT_FOLDER}/plot_size_kmers"
+    plt.rcParams.update({"font.size": FONT_SIZE})
+    fig, ax = plt.subplots()
+    for tool in TOOLS["size"]:
+        X = [d[xkey] for d in DATA["build"]]
+        Y = [d[tool]["size"] for d in DATA["build"]]
+        ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
+    ax.set_yscale("log")
+    ax.set_xscale("log")
+    ax.set_ylabel(LABEL["build"]["size"])
+    ax.set_xlabel(LABEL["build"][xkey])
+    ax.legend(
+        loc="lower center",
+        bbox_to_anchor=(0.5, 1.025),
+        ncol=ncol(len(TOOLS[task])),
+    )
+    os.makedirs(PLOT_FOLDER, exist_ok=True)
+    plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
+
+
 if __name__ == "__main__":
     for task in TASKS:
         plot_time_bytes(task)
         plot_time_kmers(task)
         plot_ram_kmers(task)
+    plot_size_kmers()
     shutil.make_archive(PLOT_FOLDER, "zip", PLOT_FOLDER)
