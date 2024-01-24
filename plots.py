@@ -51,6 +51,13 @@ LABEL["remove"] = {
     "mem": "RAM usage for deletions (in MB)",
 }
 
+
+def ncol(n):
+    if n <= 3:
+        return n
+    return (n + 1) // 2
+
+
 for filename in DATA_FILES:
     if filename.endswith(".json"):
         with open(f"{DATA_FOLDER}/{filename}", "r") as f:
@@ -82,7 +89,7 @@ def plot_time_bytes(task):
     ax.legend(
         loc="lower center",
         bbox_to_anchor=(0.5, 1.025),
-        ncol=min(3, len(TOOLS[task])),
+        ncol=ncol(len(TOOLS[task])),
     )
     os.makedirs(PLOT_FOLDER, exist_ok=True)
     plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
@@ -104,7 +111,7 @@ def plot_time_kmers(task):
     ax.legend(
         loc="lower center",
         bbox_to_anchor=(0.5, 1.025),
-        ncol=min(3, len(TOOLS[task])),
+        ncol=ncol(len(TOOLS[task])),
     )
     os.makedirs(PLOT_FOLDER, exist_ok=True)
     plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
@@ -126,7 +133,7 @@ def plot_ram_kmers(task):
     ax.legend(
         loc="lower center",
         bbox_to_anchor=(0.5, 1.025),
-        ncol=min(3, len(TOOLS[task])),
+        ncol=ncol(len(TOOLS[task])),
     )
     os.makedirs(PLOT_FOLDER, exist_ok=True)
     plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
