@@ -8,6 +8,11 @@ else:
     ENV["LD_LIBRARY_PATH"] = BIFROST_LIB
 
 
+def index_path(fasta_file):
+    prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
+    return prefix + ".gfa.gz"
+
+
 def build(fasta_file, k):
     os.makedirs(OUT_FOLDER, exist_ok=True)
     prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"

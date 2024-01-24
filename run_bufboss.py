@@ -2,6 +2,11 @@ from util import *
 import os
 
 
+def index_path(fasta_file):
+    prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
+    return prefix + "_bufboss"
+
+
 def build(fasta_file, k):
     os.makedirs(OUT_FOLDER, exist_ok=True)
     prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
