@@ -30,6 +30,10 @@ MARKER = {
 }
 LABEL = {t: t for t in MARKER}
 LABEL["DynamicBOSS"] = "DynBOSS"
+LABEL["bytes"] = "Input size (in bytes)"
+LABEL["query_bytes"] = "Query size (in bytes)"
+LABEL["kmers"] = "# k-mers"
+LABEL["query_kmers"] = "# queried k-mers"
 LABEL["build"] = {
     "time": "Construction time (in s)",
     "mem": "RAM usage during construction (in MB)",
@@ -74,7 +78,7 @@ for filename in DATA_FILES:
 
 
 def plot_time_bytes(task):
-    xkey = "bytes" if task in SINGLE_TASKS else "query_bytes"
+    xkey = "bytes" if task == "build" else "query_bytes"
     prefix = f"{PLOT_FOLDER}/plot_{task}_time_bytes"
     plt.rcParams.update({"font.size": FONT_SIZE})
     fig, ax = plt.subplots()
@@ -85,7 +89,7 @@ def plot_time_bytes(task):
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_ylabel("Construction time (in s)")
-    ax.set_xlabel("Input size (in bytes)")
+    ax.set_xlabel(LABEL[xkey])
     ax.legend(
         loc="lower center",
         bbox_to_anchor=(0.5, 1.025),
@@ -96,7 +100,7 @@ def plot_time_bytes(task):
 
 
 def plot_time_kmers(task):
-    xkey = "kmers" if task in SINGLE_TASKS else "query_kmers"
+    xkey = "kmers" if task == "build" else "query_kmers"
     prefix = f"{PLOT_FOLDER}/plot_{task}_time_kmers"
     plt.rcParams.update({"font.size": FONT_SIZE})
     fig, ax = plt.subplots()
@@ -107,7 +111,7 @@ def plot_time_kmers(task):
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_ylabel(LABEL[task]["time"])
-    ax.set_xlabel("# k-mers")
+    ax.set_xlabel(LABEL[xkey])
     ax.legend(
         loc="lower center",
         bbox_to_anchor=(0.5, 1.025),
@@ -118,7 +122,7 @@ def plot_time_kmers(task):
 
 
 def plot_ram_kmers(task):
-    xkey = "kmers" if task in SINGLE_TASKS else "query_kmers"
+    xkey = "kmers" if task == "build" else "query_kmers"
     prefix = f"{PLOT_FOLDER}/plot_{task}_ram_kmers"
     plt.rcParams.update({"font.size": FONT_SIZE})
     fig, ax = plt.subplots()
@@ -129,7 +133,7 @@ def plot_ram_kmers(task):
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_ylabel(LABEL[task]["mem"])
-    ax.set_xlabel("# k-mers")
+    ax.set_xlabel(LABEL[xkey])
     ax.legend(
         loc="lower center",
         bbox_to_anchor=(0.5, 1.025),
