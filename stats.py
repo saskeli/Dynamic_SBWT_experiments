@@ -88,6 +88,8 @@ def query_self_stats(indexed_file):
     data["BufBOSS"] = {"time": time, "mem": mem}
     # time, mem = run_dynboss.query(indexed_file, indexed_file)
     # data["DynamicBOSS"] = {"time": time, "mem": mem}
+    time, mem = run_hashset.query(indexed_file, indexed_file)
+    data["HashSet"] = {"time": time, "mem": mem}
     data["kmers"] = run_cbl.count(indexed_file)
     data["bytes"] = get_filesize(indexed_file)
     with open(output, "w+") as f:
