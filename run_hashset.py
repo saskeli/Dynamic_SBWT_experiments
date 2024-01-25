@@ -43,6 +43,24 @@ def remove(indexed_file, query_file):
     )
 
 
+def merge(indexed_file, other_indexed_file):
+    prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
+    hash_file = prefix + ".hash"
+    updated_file = f"{prefix}_mer_{get_basename(other_indexed_file)}.hash"
+    return measure_time(
+        f"./hashset/target/release/hashset merge {hash_file} {other_indexed_file} -o {updated_file}"
+    )
+
+
+def intersect(indexed_file, other_indexed_file):
+    prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
+    hash_file = prefix + ".hash"
+    updated_file = f"{prefix}_int_{get_basename(other_indexed_file)}.hash"
+    return measure_time(
+        f"./hashset/target/release/hashset intersect {hash_file} {other_indexed_file} -o {updated_file}"
+    )
+
+
 def clean(fasta_file):
     prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
     hash_file = prefix + ".hash"
