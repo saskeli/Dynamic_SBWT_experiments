@@ -27,10 +27,12 @@ def update_data(json_file, key, value):
             json.dump(data, f)
 
 
-def build_filename(prefix, fasta_file):
+def build_filename(prefix, fasta_file, k=31, prefix_bits=24):
     basename = get_basename(fasta_file)
     size = get_filesize(fasta_file)
-    return f"{DATA_FOLDER}/{prefix}_{size}_{basename}.json"
+    _k = "" if k == 31 and prefix_bits == 24 else f"_{k}"
+    _p = "" if prefix_bits == 24 else f"_{prefix_bits}"
+    return f"{DATA_FOLDER}/{prefix}{_k}{_p}_{size}_{basename}.json"
 
 
 def build_stats(fasta_file, k, prefix_bits=24):
