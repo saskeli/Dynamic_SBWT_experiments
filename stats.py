@@ -164,3 +164,35 @@ def remove_stats(indexed_file, query_file):
     data["query_bytes"] = get_filesize(query_file)
     with open(output, "w+") as f:
         json.dump(data, f)
+
+
+def merge_stats(indexed_file, other_indexed_file):
+    os.makedirs(DATA_FOLDER, exist_ok=True)
+    output = query_filename("merge", indexed_file, other_indexed_file)
+    data = {"file": indexed_file, "query_file": query_file}
+    time, mem = run_cbl.merge(indexed_file, query_file)
+    data["CBL"] = {"time": time, "mem": mem}
+    time, mem = run_hashset.merge(indexed_file, query_file)
+    data["HashSet"] = {"time": time, "mem": mem}
+    data["kmers"] = run_cbl.count(indexed_file)
+    data["bytes"] = get_filesize(indexed_file)
+    data["query_kmers"] = run_cbl.count_query(indexed_file, query_file)
+    data["query_bytes"] = get_filesize(query_file)
+    with open(output, "w+") as f:
+        json.dump(data, f)
+
+
+def intersect_stats(indexed_file, other_indexed_file):
+    os.makedirs(DATA_FOLDER, exist_ok=True)
+    output = query_filename("intersect", indexed_file, other_indexed_file)
+    data = {"file": indexed_file, "query_file": query_file}
+    time, mem = run_cbl.intersect(indexed_file, query_file)
+    data["CBL"] = {"time": time, "mem": mem}
+    time, mem = run_hashset.intersect(indexed_file, query_file)
+    data["HashSet"] = {"time": time, "mem": mem}
+    data["kmers"] = run_cbl.count(indexed_file)
+    data["bytes"] = get_filesize(indexed_file)
+    data["query_kmers"] = run_cbl.count_query(indexed_file, query_file)
+    data["query_bytes"] = get_filesize(query_file)
+    with open(output, "w+") as f:
+        json.dump(data, f)
