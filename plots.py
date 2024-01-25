@@ -8,10 +8,11 @@ import shutil
 
 PLOT_FOLDER = "plot"
 PLOT_FORMAT = ".png"
-FONT_SIZE = 12
+FONT_SIZE = 15
 SINGLE_TASKS = ["build", "query_self"]
 QUERY_TASKS = ["query_other", "insert", "remove"]
-TASKS = SINGLE_TASKS + QUERY_TASKS
+SET_TASKS = ["merge", "intersect"]
+TASKS = SINGLE_TASKS + QUERY_TASKS + SET_TASKS
 TOOLS = {
     "build": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "DynamicBOSS", "HashSet"],
     "size": ["CBL", "SSHash", "SBWT", "Bifrost", "DynamicBOSS", "HashSet"],
@@ -19,6 +20,8 @@ TOOLS = {
     "query_other": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "HashSet"],
     "insert": ["CBL", "Bifrost", "BufBOSS", "HashSet"],
     "remove": ["CBL", "BufBOSS", "HashSet"],
+    "merge": ["CBL", "HashSet"],
+    "intersect": ["CBL", "HashSet"],
     "pareto": ["CBL", "Bifrost", "BufBOSS", "HashSet"],
 }
 MARKER = {
@@ -63,6 +66,16 @@ LABEL["remove"] = {
     "query_bytes": "Query size (in bytes)",
     "query_kmers": "# deleted $k$-mers",
 }
+LABEL["merge"] = {
+    "time": "Time for union (in s)",
+    "mem": "RAM usage during union (in MB)",
+    "total_kmers": "total # $k$-mers",
+}
+LABEL["intersect"] = {
+    "time": "Time for intersection (in s)",
+    "mem": "RAM usage during intersection (in MB)",
+    "total_kmers": "total # $k$-mers",
+}
 DATA_FILES = os.listdir(DATA_FOLDER)
 DATA = {task: [] for task in TASKS}
 
@@ -70,16 +83,14 @@ DATA = {task: [] for task in TASKS}
 for filename in DATA_FILES:
     if filename.endswith(".json"):
         with open(f"{DATA_FOLDER}/{filename}", "r") as f:
-            if filename.startswith("build"):
-                DATA["build"].append(json.load(f))
-            elif filename.startswith("query_self"):
-                DATA["query_self"].append(json.load(f))
-            elif filename.startswith("query_other"):
-                DATA["query_other"].append(json.load(f))
-            elif filename.startswith("insert"):
-                DATA["insert"].append(json.load(f))
-            elif filename.startswith("remove"):
-                DATA["remove"].append(json.load(f))
+            for task in TASKS:
+                if filename.startswith(task):
+                    DATA[task].append(json.load(f))
+                    break
+for task in SET_TASKS:
+    for d in DATA[task]:
+        d["total_kmers"] = d["kmers"] + d["query_kmers"]
+
 
 
 def plot_task(task, ykey, xkey, name=None):
@@ -160,14 +171,21 @@ def ncol(n):
 
 if __name__ == "__main__":
     for task in SINGLE_TASKS:
+        print(f"Plotting {task}")
         plot_task(task, "time", "bytes")
         plot_task(task, "time", "kmers")
         plot_task(task, "mem", "kmers")
     for task in QUERY_TASKS:
+        print(f"Plotting {task}")
         plot_task(task, "time", "query_bytes")
         plot_task(task, "time", "query_kmers")
         plot_task(task, "mem", "query_kmers")
+    for task in SET_TASKS:
+        print(f"Plotting {task}")
+        plot_task(task, "time", "total_kmers")
+        plot_task(task, "mem", "total_kmers")
     for task in TASKS:
+        print(f"Plotting pareto for {task}")
         plot_pareto(task, threshold=2e7)
     plot_task("build", "size", "kmers")
     shutil.make_archive(PLOT_FOLDER, "zip", PLOT_FOLDER)
