@@ -8,7 +8,8 @@ import shutil
 
 PLOT_FOLDER = "plot"
 PLOT_FORMAT = ".png"
-FONT_SIZE = 15
+FONT_SIZE = 14
+MARKER_SIZE = 100
 SINGLE_TASKS = ["build", "query_self"]
 QUERY_TASKS = ["query_other", "insert", "remove"]
 SET_TASKS = ["merge", "intersect"]
@@ -113,7 +114,7 @@ def plot_task(task, ykey, xkey, name=None):
                     Y.append(d[tool][ykey] / 1000)
                 else:
                     Y.append(d[tool][ykey])
-        ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
+        ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], s=MARKER_SIZE, alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_ylabel(LABEL[task][ykey])
@@ -135,18 +136,18 @@ def plot_pareto(task, threshold=0, name=None):
         prefix = f"{PLOT_FOLDER}/plot_pareto_{task}"
     plt.rcParams.update({"font.size": FONT_SIZE})
     fig, ax = plt.subplots()
-    for tool in TOOLS[task]:
-        if tool in TOOLS["pareto"]:
-            X, Y = [], []
-            for d in DATA[task]:
-                n = d["kmers" if task in SINGLE_TASKS else "query_kmers"]
-                if n > threshold and tool in d and d[tool]["time"] != float("inf"):
-                    X.append(d[tool]["mem"] * 8000 / n)
-                    Y.append(d[tool]["time"] * 1e9 / n)
-            if X and Y:
-                X = [sum(X) / len(X)]
-                Y = [sum(Y) / len(Y)]
-                ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
+    tools = [t for t in TOOLS[task] if t in TOOLS["pareto"]]
+    for tool in tools:
+        X, Y = [], []
+        for d in DATA[task]:
+            n = d["kmers" if task in SINGLE_TASKS else "query_kmers"]
+            if n > threshold and tool in d and d[tool]["time"] != float("inf"):
+                X.append(d[tool]["mem"] * 8000 / n)
+                Y.append(d[tool]["time"] * 1e9 / n)
+        if X and Y:
+            X = [sum(X) / len(X)]
+            Y = [sum(Y) / len(Y)]
+            ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], s=MARKER_SIZE*2, alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_ylabel(LABEL[task]["time"].split("(")[0] + "(in ns/$k$-mer)")
@@ -154,7 +155,7 @@ def plot_pareto(task, threshold=0, name=None):
     ax.legend(
         loc="lower center",
         bbox_to_anchor=(0.5, 1.025),
-        ncol=ncol(len(TOOLS[task])),
+        ncol=ncol(len(tools)),
     )
     ax.xaxis.set_major_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
     ax.xaxis.set_minor_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
