@@ -146,7 +146,7 @@ def plot_ram_kmers(task):
         for d in DATA[task]:
             if tool in d:
                 X.append(d[xkey])
-                Y.append(d[tool]["mem"])
+                Y.append(d[tool]["mem"]) / 1000
         ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
