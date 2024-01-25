@@ -1,5 +1,6 @@
 from stats import DATA_FOLDER
 from matplotlib import pyplot as plt
+from matplotlib import ticker
 import os
 import json
 import shutil
@@ -18,6 +19,7 @@ TOOLS = {
     "query_other": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "HashSet"],
     "insert": ["CBL", "Bifrost", "BufBOSS", "HashSet"],
     "remove": ["CBL", "BufBOSS", "HashSet"],
+    "pareto": ["CBL", "Bifrost", "BufBOSS", "HashSet"],
 }
 MARKER = {
     "CBL": "o",
@@ -112,10 +114,45 @@ def plot_task(task, ykey, xkey, name=None):
     )
     os.makedirs(PLOT_FOLDER, exist_ok=True)
     plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
+    plt.close()
+
+
+def plot_pareto(task, name=None):
+    if name is not None:
+        prefix = f"{PLOT_FOLDER}/{name}"
+    else:
+        prefix = f"{PLOT_FOLDER}/plot_pareto_{task}"
+    plt.rcParams.update({"font.size": FONT_SIZE})
+    fig, ax = plt.subplots()
+    for tool in TOOLS[task]:
+        if tool in TOOLS["pareto"]:
+            X, Y = [], []
+            for d in DATA[task]:
+                n = d["kmers" if task in SINGLE_TASKS else "query_kmers"]
+                if n > 2e7 and d[tool]["time"] != float("inf"):
+                    X.append(d[tool]["mem"] * 8000 / n)
+                    Y.append(d[tool]["time"] * 1e9 / n)
+            X = [sum(X) / len(X)]
+            Y = [sum(Y) / len(Y)]
+            ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], alpha=0.5)
+    ax.set_yscale("log")
+    ax.set_xscale("log")
+    ax.set_ylabel(LABEL[task]["time"].split("(")[0] + "(in ns/$k$-mer)")
+    ax.set_xlabel("RAM usage (in bits/$k$-mer)")
+    ax.legend(
+        loc="lower center",
+        bbox_to_anchor=(0.5, 1.025),
+        ncol=ncol(len(TOOLS[task])),
+    )
+    ax.xaxis.set_major_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
+    ax.xaxis.set_minor_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
+    os.makedirs(PLOT_FOLDER, exist_ok=True)
+    plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
+    plt.close()
 
 
 def ncol(n):
-    if n <= 3:
+    if n <= 4:
         return n
     return (n + 1) // 2
 
@@ -125,9 +162,11 @@ if __name__ == "__main__":
         plot_task(task, "time", "bytes")
         plot_task(task, "time", "kmers")
         plot_task(task, "mem", "kmers")
+        plot_pareto(task)
     for task in QUERY_TASKS:
         plot_task(task, "time", "query_bytes")
         plot_task(task, "time", "query_kmers")
         plot_task(task, "mem", "query_kmers")
+        plot_pareto(task)
     plot_task("build", "size", "kmers")
     shutil.make_archive(PLOT_FOLDER, "zip", PLOT_FOLDER)
