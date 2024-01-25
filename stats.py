@@ -166,9 +166,17 @@ def remove_stats(indexed_file, query_file):
         json.dump(data, f)
 
 
-def merge_stats(indexed_file, other_indexed_file):
+def merge_stats(indexed_file, other_indexed_file, k=31, prefix_bits=24):
     os.makedirs(DATA_FOLDER, exist_ok=True)
     output = query_filename("merge", indexed_file, other_indexed_file)
+    if not os.path.exists(run_cbl.index_path(indexed_file)):
+        run_cbl.build(indexed_file, k, prefix_bits)
+    if not os.path.exists(run_cbl.index_path(other_indexed_file)):
+        run_cbl.build(other_indexed_file, k, prefix_bits)
+    if not os.path.exists(run_hashset.index_path(indexed_file)):
+        run_hashset.build(indexed_file, k)
+    if not os.path.exists(run_hashset.index_path(other_indexed_file)):
+        run_hashset.build(other_indexed_file, k)
     data = {"file": indexed_file, "other_file": other_indexed_file}
     time, mem = run_cbl.merge(indexed_file, other_indexed_file)
     data["CBL"] = {"time": time, "mem": mem}
@@ -182,9 +190,17 @@ def merge_stats(indexed_file, other_indexed_file):
         json.dump(data, f)
 
 
-def intersect_stats(indexed_file, other_indexed_file):
+def intersect_stats(indexed_file, other_indexed_file, k=31, prefix_bits=24):
     os.makedirs(DATA_FOLDER, exist_ok=True)
     output = query_filename("intersect", indexed_file, other_indexed_file)
+    if not os.path.exists(run_cbl.index_path(indexed_file)):
+        run_cbl.build(indexed_file, k, prefix_bits)
+    if not os.path.exists(run_cbl.index_path(other_indexed_file)):
+        run_cbl.build(other_indexed_file, k, prefix_bits)
+    if not os.path.exists(run_hashset.index_path(indexed_file)):
+        run_hashset.build(indexed_file, k)
+    if not os.path.exists(run_hashset.index_path(other_indexed_file)):
+        run_hashset.build(other_indexed_file, k)
     data = {"file": indexed_file, "other_file": other_indexed_file}
     time, mem = run_cbl.intersect(indexed_file, other_indexed_file)
     data["CBL"] = {"time": time, "mem": mem}
