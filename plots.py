@@ -123,7 +123,8 @@ def plot_task(task, ykey, xkey, name=None):
                     Y.append(d[tool][ykey] / 1000)
                 else:
                     Y.append(d[tool][ykey])
-        ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], c=COLOR[tool], s=MARKER_SIZE, alpha=0.5)
+        if X and Y:
+            ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], c=COLOR[tool], s=MARKER_SIZE, alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_ylabel(LABEL[task][ykey])
