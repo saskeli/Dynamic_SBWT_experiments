@@ -34,6 +34,15 @@ MARKER = {
     "DynamicBOSS": "X",
     "HashSet": "^",
 }
+COLOR = {
+    "CBL": "tab:blue",
+    "SSHash": "tab:pink",
+    "SBWT": "tab:purple",
+    "Bifrost": "tab:green",
+    "BufBOSS": "tab:orange",
+    "DynamicBOSS": "tab:brown",
+    "HashSet": "tab:red",
+}
 LABEL = {t: t for t in MARKER}
 LABEL["DynamicBOSS"] = "DynBOSS"
 LABEL["build"] = {
@@ -114,7 +123,7 @@ def plot_task(task, ykey, xkey, name=None):
                     Y.append(d[tool][ykey] / 1000)
                 else:
                     Y.append(d[tool][ykey])
-        ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], s=MARKER_SIZE, alpha=0.5)
+        ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], c=COLOR[tool], s=MARKER_SIZE, alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_ylabel(LABEL[task][ykey])
@@ -147,7 +156,7 @@ def plot_pareto(task, threshold=0, name=None):
         if X and Y:
             X = [sum(X) / len(X)]
             Y = [sum(Y) / len(Y)]
-            ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], s=MARKER_SIZE*2, alpha=0.5)
+            ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], c=COLOR[tool], s=MARKER_SIZE*2, alpha=0.5)
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_ylabel(LABEL[task]["time"].split("(")[0] + "(in ns/$k$-mer)")
