@@ -7,11 +7,13 @@ def index_path(fasta_file):
     return prefix + ".cbl"
 
 
-def build(fasta_file, k):
+def build(fasta_file, k, prefix_bits=24):
     os.makedirs(OUT_FOLDER, exist_ok=True)
     prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
     cbl_file = prefix + ".cbl"
-    run_cmd(f"cd CBL && K={k} cargo +nightly build --release --examples")
+    run_cmd(
+        f"cd CBL && K={k} PREFIX_BITS={prefix_bits} cargo +nightly build --release --examples"
+    )
     return measure_time(
         f"./CBL/target/release/examples/build_index {fasta_file} -o {cbl_file}"
     )

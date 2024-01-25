@@ -33,11 +33,11 @@ def build_filename(prefix, fasta_file):
     return f"{DATA_FOLDER}/{prefix}_{size}_{basename}.json"
 
 
-def build_stats(fasta_file, k):
+def build_stats(fasta_file, k, prefix_bits=24):
     os.makedirs(DATA_FOLDER, exist_ok=True)
     output = build_filename("build", fasta_file)
     data = {"file": fasta_file}
-    time, mem = run_cbl.build(fasta_file, k)
+    time, mem = run_cbl.build(fasta_file, k, prefix_bits=prefix_bits)
     data["CBL"] = {"time": time, "mem": mem}
     data["CBL"]["size"] = get_filesize(run_cbl.index_path(fasta_file))
     time, mem = run_sshash.build(fasta_file, k)
