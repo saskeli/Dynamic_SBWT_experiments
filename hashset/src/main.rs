@@ -27,6 +27,9 @@ enum Command {
     Query(QueryArgs),
     Insert(UpdateArgs),
     Remove(UpdateArgs),
+    Merge(MergeArgs),
+    Intersect(MergeArgs),
+    Difference(MergeArgs),
 }
 
 #[derive(Args, Debug)]
@@ -53,6 +56,17 @@ struct UpdateArgs {
     /// Input file to query (FASTA/Q, possibly gzipped)
     input: String,
     /// Output file (otherwise overwrite the index file)
+    #[arg(short, long)]
+    output: Option<String>,
+}
+
+#[derive(Args, Debug)]
+struct MergeArgs {
+    /// Index file (Hash format)
+    index: String,
+    /// Index file (Hash format)
+    other_index: String,
+    /// Output file (otherwise overwrite the first index)
     #[arg(short, long)]
     output: Option<String>,
 }
@@ -176,6 +190,87 @@ fn main() {
             let mut writer = BufWriter::new(output);
             eprintln!("Writing the updated index to {output_filename}");
             serialize_into(&mut writer, &set).unwrap();
+        }
+        Command::Merge(args) => {
+            let index_filename = args.index.as_str();
+            let other_index_filename = args.other_index.as_str();
+            let output_filename = if let Some(filename) = args.output {
+                filename
+            } else {
+                index_filename.to_owned()
+            };
+
+            let index = File::open(index_filename)
+                .unwrap_or_else(|_| panic!("Failed to open {index_filename}"));
+            let reader = BufReader::new(index);
+            eprintln!("Reading the index stored in {index_filename}");
+            let set: HashSet<IntKmer<K, KT>> = deserialize_from(reader).unwrap();
+
+            let other_index = File::open(other_index_filename)
+                .unwrap_or_else(|_| panic!("Failed to open {other_index_filename}"));
+            let reader = BufReader::new(other_index);
+            eprintln!("Reading the index stored in {other_index_filename}");
+            let set2: HashSet<IntKmer<K, KT>> = deserialize_from(reader).unwrap();
+
+            let output = File::create(output_filename.as_str())
+                .unwrap_or_else(|_| panic!("Failed to open {output_filename}"));
+            let mut writer = BufWriter::new(output);
+            eprintln!("Writing the updated index to {output_filename}");
+            serialize_into(&mut writer, &(&set | &set2)).unwrap();
+        }
+        Command::Intersect(args) => {
+            let index_filename = args.index.as_str();
+            let other_index_filename = args.other_index.as_str();
+            let output_filename = if let Some(filename) = args.output {
+                filename
+            } else {
+                index_filename.to_owned()
+            };
+
+            let index = File::open(index_filename)
+                .unwrap_or_else(|_| panic!("Failed to open {index_filename}"));
+            let reader = BufReader::new(index);
+            eprintln!("Reading the index stored in {index_filename}");
+            let set: HashSet<IntKmer<K, KT>> = deserialize_from(reader).unwrap();
+
+            let other_index = File::open(other_index_filename)
+                .unwrap_or_else(|_| panic!("Failed to open {other_index_filename}"));
+            let reader = BufReader::new(other_index);
+            eprintln!("Reading the index stored in {other_index_filename}");
+            let set2: HashSet<IntKmer<K, KT>> = deserialize_from(reader).unwrap();
+
+            let output = File::create(output_filename.as_str())
+                .unwrap_or_else(|_| panic!("Failed to open {output_filename}"));
+            let mut writer = BufWriter::new(output);
+            eprintln!("Writing the updated index to {output_filename}");
+            serialize_into(&mut writer, &(&set & &set2)).unwrap();
+        }
+        Command::Difference(args) => {
+            let index_filename = args.index.as_str();
+            let other_index_filename = args.other_index.as_str();
+            let output_filename = if let Some(filename) = args.output {
+                filename
+            } else {
+                index_filename.to_owned()
+            };
+
+            let index = File::open(index_filename)
+                .unwrap_or_else(|_| panic!("Failed to open {index_filename}"));
+            let reader = BufReader::new(index);
+            eprintln!("Reading the index stored in {index_filename}");
+            let set: HashSet<IntKmer<K, KT>> = deserialize_from(reader).unwrap();
+
+            let other_index = File::open(other_index_filename)
+                .unwrap_or_else(|_| panic!("Failed to open {other_index_filename}"));
+            let reader = BufReader::new(other_index);
+            eprintln!("Reading the index stored in {other_index_filename}");
+            let set2: HashSet<IntKmer<K, KT>> = deserialize_from(reader).unwrap();
+
+            let output = File::create(output_filename.as_str())
+                .unwrap_or_else(|_| panic!("Failed to open {output_filename}"));
+            let mut writer = BufWriter::new(output);
+            eprintln!("Writing the updated index to {output_filename}");
+            serialize_into(&mut writer, &(&set - &set2)).unwrap();
         }
     }
 }
