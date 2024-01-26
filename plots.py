@@ -146,6 +146,7 @@ def plot_pareto(task, threshold=0, name=None):
         prefix = f"{PLOT_FOLDER}/plot_pareto_{task}"
     plt.rcParams.update({"font.size": FONT_SIZE})
     fig, ax = plt.subplots()
+    ax.grid(visible=True, which="both", axis="both", linestyle=":")
     tools = [t for t in TOOLS[task] if t in TOOLS["pareto"]]
     for tool in tools:
         X, Y = [], []
@@ -167,8 +168,8 @@ def plot_pareto(task, threshold=0, name=None):
         bbox_to_anchor=(0.5, 1.025),
         ncol=ncol(len(tools)),
     )
-    ax.xaxis.set_major_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
-    ax.xaxis.set_minor_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
+    # ax.xaxis.set_major_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
+    # ax.xaxis.set_minor_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
     os.makedirs(PLOT_FOLDER, exist_ok=True)
     plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
     plt.close()
