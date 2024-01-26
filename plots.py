@@ -169,7 +169,7 @@ def plot_pareto(task, threshold=0, name=None):
         ncol=ncol(len(tools)),
     )
     # ax.xaxis.set_major_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
-    # ax.xaxis.set_minor_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
+    ax.xaxis.set_minor_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
     os.makedirs(PLOT_FOLDER, exist_ok=True)
     plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
     plt.close()
