@@ -2,6 +2,16 @@
 
 Experiments for the [CBL](https://github.com/imartayan/CBL) paper
 
+You can clone the repository and its submodules with
+```sh
+git clone --recursive https://github.com/imartayan/CBL_experiments.git
+```
+
+If you did not use the `--recursive` flag, make sure to load the submodules with
+```sh
+git submodule update --init --recursive
+```
+
 ## Setup
 
 The installation script is written for Debian-based distributions.
