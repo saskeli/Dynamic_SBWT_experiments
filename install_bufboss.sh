@@ -4,7 +4,7 @@ set -euxo pipefail
 git submodule update --init --recursive
 cd bufboss
 cd KMC
-make
+make -j
 cd ..
 cd sdsl-lite
 sh install.sh
@@ -13,7 +13,7 @@ cd stxxl
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release -DUSE_GNU_PARALLEL=ON -DCMAKE_INSTALL_PREFIX=./install
-make
+make -j
 make install
 cd ../..
-make all
+make -j all

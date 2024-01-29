@@ -11,4 +11,4 @@ make dsk canon=0
 # make dsk k=64 canon=0
 cd ..
 cd src
-make revcomps=0
+make -j revcomps=0
