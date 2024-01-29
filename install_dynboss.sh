@@ -1,7 +1,6 @@
 #!/bin/bash
 set -euxo pipefail
 
-git submodule update --init --recursive
 cd dynboss
 sed -i -e 's/python /python3 /g' src/Makefile
 sed -i -e 's/print /print(/g' src/make_lut.py

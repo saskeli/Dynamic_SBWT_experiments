@@ -1,7 +1,6 @@
 #!/bin/bash
 set -euxo pipefail
 
-git submodule update --init --recursive
 cd bufboss
 cd KMC
 make -j
