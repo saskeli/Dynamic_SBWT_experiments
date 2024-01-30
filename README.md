@@ -30,6 +30,10 @@ bash install_all.sh
 
 ## Running the experiments
 
+The experiments are divided into two parts: building indexes from FASTA files and querying these indexes.
+The files to build must be written in `fof_build.txt` (one file per line) and those to query in `fof_query.txt` (one file per line, each linked to the corresponding line in `fof_build.txt`).
+
+You can run all the experiments with
 ```sh
 python3 main.py
 ```
@@ -38,8 +42,9 @@ This will write the results of the experiments in the `data` folder, please leav
 
 ## Generating the plots
 
+You can generate all the plots with
 ```sh
 python3 plots.py
 ```
 
-This will save all the plots in the `plot` folder, and create an archive from it.
+This will save the plots in the `plot` folder, and create an archive from it.
