@@ -1,4 +1,4 @@
-from stats import DATA_FOLDER
+from runner import DATA_FOLDER
 from matplotlib import pyplot as plt
 from matplotlib import ticker
 import os

@@ -1,5 +1,5 @@
 import util
-import stats
+import runner
 import os
 
 
@@ -33,13 +33,13 @@ if __name__ == "__main__":
 
     for fasta_file in set(BUILD):
         print(f"BUILD {fasta_file}")
-        stats.build_stats(fasta_file, **PARAMS)
-        stats.query_self_stats(fasta_file, **PARAMS)
+        runner.build(fasta_file, **PARAMS)
+        runner.query_self(fasta_file, **PARAMS)
 
     for indexed_file, query_file in set(zip(BUILD, QUERY)):
         print(f"QUERY {indexed_file} with {query_file}")
-        stats.query_other_stats(indexed_file, query_file, **PARAMS)
-        stats.insert_stats(indexed_file, query_file, **PARAMS)
-        stats.remove_stats(indexed_file, query_file, **PARAMS)
-        stats.merge_stats(indexed_file, query_file, **PARAMS)
-        stats.intersect_stats(indexed_file, query_file, **PARAMS)
+        runner.query_other(indexed_file, query_file, **PARAMS)
+        runner.insert(indexed_file, query_file, **PARAMS)
+        runner.remove(indexed_file, query_file, **PARAMS)
+        runner.merge(indexed_file, query_file, **PARAMS)
+        runner.intersect(indexed_file, query_file, **PARAMS)

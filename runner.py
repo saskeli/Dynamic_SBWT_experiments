@@ -33,7 +33,6 @@ TOOLS = {
 
 
 def update_data(json_file, field=None, **kwargs):
-    print(kwargs)
     os.makedirs(DATA_FOLDER, exist_ok=True)
     if os.path.exists(json_file):
         with open(json_file, "r") as f:
@@ -77,7 +76,7 @@ def query_filename(prefix, indexed_file, query_file, **params):
     return f"{DATA_FOLDER}/{prefix}{_k}{_p}_{size}_{index_basename}_{query_basename}.json"
 
 
-def build_stats(fasta_file, **params):
+def build(fasta_file, **params):
     output = build_filename("build", fasta_file, **params)
     update_data(
         output,
@@ -96,7 +95,7 @@ def build_stats(fasta_file, **params):
     update_data(output, kmers=run_cbl.count(fasta_file, **params))
 
 
-def query_self_stats(indexed_file, **params):
+def query_self(indexed_file, **params):
     output = query_filename("query_self", indexed_file, indexed_file, **params)
     update_data(
         output,
@@ -114,7 +113,7 @@ def query_self_stats(indexed_file, **params):
     update_data(output, kmers=run_cbl.count(indexed_file, **params))
 
 
-def query_other_stats(indexed_file, query_file, **params):
+def query_other(indexed_file, query_file, **params):
     output = query_filename("query_other", indexed_file, query_file, **params)
     update_data(
         output,
@@ -138,7 +137,7 @@ def query_other_stats(indexed_file, query_file, **params):
     )
 
 
-def insert_stats(indexed_file, query_file, **params):
+def insert(indexed_file, query_file, **params):
     output = query_filename("insert", indexed_file, query_file, **params)
     update_data(
         output,
@@ -162,7 +161,7 @@ def insert_stats(indexed_file, query_file, **params):
     )
 
 
-def remove_stats(indexed_file, query_file, **params):
+def remove(indexed_file, query_file, **params):
     output = query_filename("remove", indexed_file, query_file, **params)
     update_data(
         output,
@@ -186,7 +185,7 @@ def remove_stats(indexed_file, query_file, **params):
     )
 
 
-def merge_stats(indexed_file, other_indexed_file, **params):
+def merge(indexed_file, other_indexed_file, **params):
     output = query_filename("merge", indexed_file, other_indexed_file, **params)
     update_data(
         output,
@@ -212,7 +211,7 @@ def merge_stats(indexed_file, other_indexed_file, **params):
     )
 
 
-def intersect_stats(indexed_file, other_indexed_file, **params):
+def intersect(indexed_file, other_indexed_file, **params):
     output = query_filename("intersect", indexed_file, other_indexed_file, **params)
     update_data(
         output,
