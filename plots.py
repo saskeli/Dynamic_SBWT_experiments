@@ -114,7 +114,9 @@ def plot_task(task, ykey, xkey, name=None):
         prefix = f"{PLOT_FOLDER}/plot_{task}_{ykey}_{xkey.split('_')[-1]}"
     plt.rcParams.update({"font.size": FONT_SIZE})
     fig, ax = plt.subplots()
-    for tool in TOOLS[task]:
+    tools = TOOLS[task]
+    done = []
+    for tool in tools:
         X, Y = [], []
         for d in DATA[task]:
             if tool in d and ykey in d[tool]:
@@ -125,17 +127,19 @@ def plot_task(task, ykey, xkey, name=None):
                     Y.append(d[tool][ykey])
         if X and Y:
             ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], c=COLOR[tool], s=MARKER_SIZE, alpha=0.5)
-    ax.set_yscale("log")
-    ax.set_xscale("log")
-    ax.set_ylabel(LABEL[task][ykey])
-    ax.set_xlabel(LABEL[task][xkey])
-    ax.legend(
-        loc="lower center",
-        bbox_to_anchor=(0.5, 1.025),
-        ncol=ncol(len(TOOLS[task])),
-    )
-    os.makedirs(PLOT_FOLDER, exist_ok=True)
-    plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
+            done.append(tool)
+    if done:
+        ax.set_yscale("log")
+        ax.set_xscale("log")
+        ax.set_ylabel(LABEL[task][ykey])
+        ax.set_xlabel(LABEL[task][xkey])
+        ax.legend(
+            loc="lower center",
+            bbox_to_anchor=(0.5, 1.025),
+            ncol=ncol(len(done)),
+        )
+        os.makedirs(PLOT_FOLDER, exist_ok=True)
+        plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
     plt.close()
 
 
@@ -148,6 +152,7 @@ def plot_pareto(task, threshold=0, name=None):
     fig, ax = plt.subplots()
     ax.grid(visible=True, which="both", axis="both", linestyle=":")
     tools = [t for t in TOOLS[task] if t in TOOLS["pareto"]]
+    done = []
     for tool in tools:
         X, Y = [], []
         for d in DATA[task]:
@@ -159,19 +164,20 @@ def plot_pareto(task, threshold=0, name=None):
             X = [sum(X) / len(X)]
             Y = [sum(Y) / len(Y)]
             ax.scatter(X, Y, label=LABEL[tool], marker=MARKER[tool], c=COLOR[tool], s=MARKER_SIZE*2, alpha=0.5)
-    ax.set_yscale("log")
-    ax.set_xscale("log")
-    ax.set_ylabel(LABEL[task]["time"].split("(")[0] + "(in ns/$k$-mer)")
-    ax.set_xlabel("RAM usage (in bits/$k$-mer)")
-    ax.legend(
-        loc="lower center",
-        bbox_to_anchor=(0.5, 1.025),
-        ncol=ncol(len(tools)),
-    )
-    # ax.xaxis.set_major_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
-    ax.xaxis.set_minor_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
-    os.makedirs(PLOT_FOLDER, exist_ok=True)
-    plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
+            done.append(tool)
+    if done:
+        ax.set_yscale("log")
+        ax.set_xscale("log")
+        ax.set_ylabel(LABEL[task]["time"].split("(")[0] + "(in ns/$k$-mer)")
+        ax.set_xlabel("RAM usage (in bits/$k$-mer)")
+        ax.legend(
+            loc="lower center",
+            bbox_to_anchor=(0.5, 1.025),
+            ncol=ncol(len(done)),
+        )
+        ax.xaxis.set_minor_formatter(ticker.LogFormatterSciNotation(labelOnlyBase=True))
+        os.makedirs(PLOT_FOLDER, exist_ok=True)
+        plt.savefig(prefix + PLOT_FORMAT, bbox_inches="tight", dpi=300)
     plt.close()
 
 
