@@ -15,15 +15,15 @@ QUERY_TASKS = ["query_other", "insert", "remove"]
 SET_TASKS = ["merge", "intersect"]
 TASKS = SINGLE_TASKS + QUERY_TASKS + SET_TASKS
 TOOLS = {
-    "build": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "DynamicBOSS", "HashSet"],
-    "size": ["CBL", "SSHash", "SBWT", "Bifrost", "DynamicBOSS", "HashSet"],
-    "query_self": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "HashSet"],
-    "query_other": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "HashSet"],
-    "insert": ["CBL", "Bifrost", "BufBOSS", "HashSet"],
-    "remove": ["CBL", "BufBOSS", "HashSet"],
+    "build": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "BufBOSS", "DynamicBOSS"],
+    "size": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "DynamicBOSS"],
+    "query_self": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "BufBOSS"],
+    "query_other": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "BufBOSS"],
+    "insert": ["CBL", "HashSet", "Bifrost", "BufBOSS"],
+    "remove": ["CBL", "HashSet", "BufBOSS"],
     "merge": ["CBL", "HashSet"],
     "intersect": ["CBL", "HashSet"],
-    "pareto": ["CBL", "Bifrost", "BufBOSS", "HashSet"],
+    "pareto": ["CBL", "HashSet", "Bifrost", "BufBOSS"],
 }
 MARKER = {
     "CBL": "o",
