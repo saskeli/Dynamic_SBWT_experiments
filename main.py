@@ -32,13 +32,15 @@ if __name__ == "__main__":
     else:
         print(f"Please write the FASTA files to query in {FOF_QUERY}")
 
-    for fasta_file in BUILD:
+    for fasta_file in set(BUILD):
+        print(f"BUILD {fasta_file}")
         stats.build_stats(fasta_file, K, PREFIX_BITS)
         stats.query_self_stats(fasta_file)
 
-    for indexed_file, query_file in zip(BUILD, QUERY):
+    for indexed_file, query_file in set(zip(BUILD, QUERY)):
+        print(f"QUERY {indexed_file} with {query_file}")
         stats.query_other_stats(indexed_file, query_file)
         stats.insert_stats(indexed_file, query_file)
         stats.remove_stats(indexed_file, query_file)
-        stats.merge_stats(indexed_file, query_file)
-        stats.intersect_stats(indexed_file, query_file)
+        stats.merge_stats(indexed_file, query_file, K, PREFIX_BITS)
+        stats.intersect_stats(indexed_file, query_file, K, PREFIX_BITS)
