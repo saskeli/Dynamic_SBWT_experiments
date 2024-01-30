@@ -33,6 +33,8 @@ bash install_all.sh
 The experiments are divided into two parts: building indexes from FASTA files and querying these indexes.
 The files to build must be written in `fof_build.txt` (one file per line) and those to query in `fof_query.txt` (one file per line, each linked to the corresponding line in `fof_build.txt`).
 
+The files currently listed in `fof_build.txt` and `fof_query.txt` can be downloaded from the [NCBI database](https://www.ncbi.nlm.nih.gov/).
+
 You can run all the experiments with
 ```sh
 python3 main.py
