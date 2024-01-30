@@ -119,7 +119,7 @@ def plot_task(task, ykey, xkey, name=None):
     for tool in tools:
         X, Y = [], []
         for d in DATA[task]:
-            if tool in d and ykey in d[tool]:
+            if tool in d and ykey in d[tool] and d[tool][ykey] != float("inf"):
                 X.append(d[xkey])
                 if ykey == "mem":
                     Y.append(d[tool][ykey] / 1000)
