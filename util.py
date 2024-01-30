@@ -7,10 +7,10 @@ import os
 GNU_TIME = "/usr/bin/time"
 ENV = os.environ.copy()
 OUT_FOLDER = "out"
-TIMEOUT = None
 
 
-def run_cmd(command, timeout=None):
+def run_cmd(command, **params):
+    timeout = params["timeout"] if "timeout" in params else None
     sys.stderr.write("> " + command + "\n")
     try:
         proc = subprocess.run(
@@ -41,11 +41,11 @@ def run_cmd(command, timeout=None):
         return None, None
 
 
-def measure_time(command, timeout=TIMEOUT):
+def measure_time(command, **params):
     """
     Measure time (in s) and memory usage (in KB) of a command
     """
-    _, err = run_cmd(f"{GNU_TIME} -f '%U %M' {command}", timeout=timeout)
+    _, err = run_cmd(f"{GNU_TIME} -f '%U %M' {command}", **params)
     try:
         time_s, mem_kb = err.splitlines()[-1].split()
         return float(time_s), int(mem_kb)

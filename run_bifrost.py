@@ -13,35 +13,31 @@ def index_path(fasta_file):
     return prefix + ".gfa.gz"
 
 
-def build(fasta_file, k):
+def build(fasta_file, **params):
+    k = params["k"]
     os.makedirs(OUT_FOLDER, exist_ok=True)
     prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
     return measure_time(
-        f"./bifrost/build/bin/Bifrost build -r {fasta_file} -o {prefix} -k {k} -t 1"
+        f"./bifrost/build/bin/Bifrost build -r {fasta_file} -o {prefix} -k {k} -t 1",
+        **params
     )
 
 
-def query(indexed_file, query_file):
+def query(indexed_file, query_file, **params):
     prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
     gfa_file = prefix + ".gfa.gz"
     updated_prefix = f"{prefix}_query_{get_basename(query_file)}"
     return measure_time(
-        f"./bifrost/build/bin/Bifrost query -g {gfa_file} -q {query_file} -o {updated_prefix} -t 1"
+        f"./bifrost/build/bin/Bifrost query -g {gfa_file} -q {query_file} -o {updated_prefix} -t 1",
+        **params
     )
 
 
-def insert(indexed_file, query_file):
+def insert(indexed_file, query_file, **params):
     prefix = f"{OUT_FOLDER}/{get_basename(indexed_file)}"
     gfa_file = prefix + ".gfa.gz"
     updated_prefix = f"{prefix}_add_{get_basename(query_file)}"
     return measure_time(
-        f"./bifrost/build/bin/Bifrost update -g {gfa_file} -r {query_file} -o {updated_prefix} -t 1"
+        f"./bifrost/build/bin/Bifrost update -g {gfa_file} -r {query_file} -o {updated_prefix} -t 1",
+        **params
     )
-
-
-def clean(fasta_file):
-    prefix = f"{OUT_FOLDER}/{get_basename(fasta_file)}"
-    gfa_file = prefix + ".gfa.gz"
-    bfi_file = prefix + ".bfi"
-    os.remove(gfa_file)
-    os.remove(bfi_file)

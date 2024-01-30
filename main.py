@@ -3,13 +3,12 @@ import stats
 import os
 
 
-K = 31
-PREFIX_BITS = 28
+PARAMS = {"k": 31, "prefix_bits": 28, "m": 20, "timeout": 300}
 FOF_BUILD = "fof_build.txt"
 FOF_QUERY = "fof_query.txt"
-util.TIMEOUT = 300
 BUILD = []
 QUERY = []
+
 
 if __name__ == "__main__":
     if os.path.exists(FOF_BUILD):
@@ -34,13 +33,13 @@ if __name__ == "__main__":
 
     for fasta_file in set(BUILD):
         print(f"BUILD {fasta_file}")
-        stats.build_stats(fasta_file, K, PREFIX_BITS)
-        stats.query_self_stats(fasta_file)
+        stats.build_stats(fasta_file, **PARAMS)
+        stats.query_self_stats(fasta_file, **PARAMS)
 
     for indexed_file, query_file in set(zip(BUILD, QUERY)):
         print(f"QUERY {indexed_file} with {query_file}")
-        stats.query_other_stats(indexed_file, query_file)
-        stats.insert_stats(indexed_file, query_file)
-        stats.remove_stats(indexed_file, query_file)
-        stats.merge_stats(indexed_file, query_file, K, PREFIX_BITS)
-        stats.intersect_stats(indexed_file, query_file, K, PREFIX_BITS)
+        stats.query_other_stats(indexed_file, query_file, **PARAMS)
+        stats.insert_stats(indexed_file, query_file, **PARAMS)
+        stats.remove_stats(indexed_file, query_file, **PARAMS)
+        stats.merge_stats(indexed_file, query_file, **PARAMS)
+        stats.intersect_stats(indexed_file, query_file, **PARAMS)
