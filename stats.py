@@ -21,27 +21,37 @@ CLI = {
     "SSHash": run_sshash,
 }
 TOOLS = {
-    "build": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "DynamicBOSS", "HashSet"],
-    "size": ["CBL", "SSHash", "SBWT", "Bifrost", "DynamicBOSS", "HashSet"],
-    "query_self": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "HashSet"],
-    "query_other": ["CBL", "SSHash", "SBWT", "Bifrost", "BufBOSS", "HashSet"],
-    "insert": ["CBL", "Bifrost", "BufBOSS", "HashSet"],
-    "remove": ["CBL", "BufBOSS", "HashSet"],
+    "build": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "BufBOSS", "DynamicBOSS"],
+    "size": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "DynamicBOSS"],
+    "query_self": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "BufBOSS"],
+    "query_other": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "BufBOSS"],
+    "insert": ["CBL", "HashSet", "Bifrost", "BufBOSS"],
+    "remove": ["CBL", "HashSet", "BufBOSS"],
     "merge": ["CBL", "HashSet"],
     "intersect": ["CBL", "HashSet"],
 }
 
 
-def update_data(json_file, key, value):
+def update_data(json_file, field=None, **kwargs):
+    print(kwargs)
     os.makedirs(DATA_FOLDER, exist_ok=True)
     if os.path.exists(json_file):
         with open(json_file, "r") as f:
             data = json.load(f)
-        data[key] = value
+        if field:
+            if field in data:
+                data[field] |= kwargs
+            else:
+                data[field] = kwargs
+        else:
+            data |= kwargs
         with open(json_file, "w") as f:
             json.dump(data, f)
     else:
-        data = {key: value}
+        if field:
+            data = {field: kwargs}
+        else:
+            data = kwargs
         with open(json_file, "w+") as f:
             json.dump(data, f)
 
@@ -68,98 +78,125 @@ def query_filename(prefix, indexed_file, query_file, **params):
 
 
 def build_stats(fasta_file, **params):
-    os.makedirs(DATA_FOLDER, exist_ok=True)
     output = build_filename("build", fasta_file, **params)
-    data = {"file": fasta_file}
+    update_data(
+        output,
+        file=fasta_file,
+        bytes=get_filesize(fasta_file),
+        k=params["k"],
+        prefix_bits=params["prefix_bits"],
+    )
     for tool in TOOLS["build"]:
         time, mem = CLI[tool].build(fasta_file, **params)
-        data[tool] = {"time": time, "mem": mem}
+        update_data(output, field=tool, time=time, mem=mem)
         if tool in TOOLS["size"]:
             index_file = CLI[tool].index_path(fasta_file)
             if os.path.exists(index_file):
-                data[tool]["size"] = get_filesize(index_file)
-    data["k"] = params["k"]
-    data["prefix_bits"] = params["prefix_bits"]
-    data["kmers"] = run_cbl.count(fasta_file, **params)
-    data["bytes"] = get_filesize(fasta_file)
-    with open(output, "w+") as f:
-        json.dump(data, f)
+                update_data(output, field=tool, size=get_filesize(index_file))
+    update_data(output, kmers=run_cbl.count(fasta_file, **params))
 
 
 def query_self_stats(indexed_file, **params):
-    os.makedirs(DATA_FOLDER, exist_ok=True)
     output = query_filename("query_self", indexed_file, indexed_file, **params)
-    data = {"file": indexed_file}
+    update_data(
+        output,
+        file=indexed_file,
+        bytes=get_filesize(indexed_file),
+        k=params["k"],
+        prefix_bits=params["prefix_bits"],
+    )
     for tool in TOOLS["query_self"]:
         if not os.path.exists(CLI[tool].index_path(indexed_file)):
             CLI[tool].build(indexed_file, **params)
         if os.path.exists(CLI[tool].index_path(indexed_file)):
             time, mem = CLI[tool].query(indexed_file, indexed_file, **params)
-            data[tool] = {"time": time, "mem": mem}
-    data["kmers"] = run_cbl.count(indexed_file, **params)
-    data["bytes"] = get_filesize(indexed_file)
-    with open(output, "w+") as f:
-        json.dump(data, f)
+            update_data(output, field=tool, time=time, mem=mem)
+    update_data(output, kmers=run_cbl.count(indexed_file, **params))
 
 
 def query_other_stats(indexed_file, query_file, **params):
-    os.makedirs(DATA_FOLDER, exist_ok=True)
     output = query_filename("query_other", indexed_file, query_file, **params)
-    data = {"file": indexed_file, "query_file": query_file}
+    update_data(
+        output,
+        file=indexed_file,
+        query_file=query_file,
+        bytes=get_filesize(indexed_file),
+        query_bytes=get_filesize(query_file),
+        k=params["k"],
+        prefix_bits=params["prefix_bits"],
+    )
     for tool in TOOLS["query_other"]:
         if not os.path.exists(CLI[tool].index_path(indexed_file)):
             CLI[tool].build(indexed_file, **params)
         if os.path.exists(CLI[tool].index_path(indexed_file)):
             time, mem = CLI[tool].query(indexed_file, query_file, **params)
-            data[tool] = {"time": time, "mem": mem}
-    data["kmers"] = run_cbl.count(indexed_file, **params)
-    data["bytes"] = get_filesize(indexed_file)
-    data["query_kmers"] = run_cbl.count_query(indexed_file, query_file, **params)
-    data["query_bytes"] = get_filesize(query_file)
-    with open(output, "w+") as f:
-        json.dump(data, f)
+            update_data(output, field=tool, time=time, mem=mem)
+    update_data(
+        output,
+        kmers=run_cbl.count(indexed_file, **params),
+        query_kmers=run_cbl.count_query(indexed_file, query_file, **params),
+    )
 
 
 def insert_stats(indexed_file, query_file, **params):
-    os.makedirs(DATA_FOLDER, exist_ok=True)
     output = query_filename("insert", indexed_file, query_file, **params)
-    data = {"file": indexed_file, "query_file": query_file}
+    update_data(
+        output,
+        file=indexed_file,
+        query_file=query_file,
+        bytes=get_filesize(indexed_file),
+        query_bytes=get_filesize(query_file),
+        k=params["k"],
+        prefix_bits=params["prefix_bits"],
+    )
     for tool in TOOLS["insert"]:
         if not os.path.exists(CLI[tool].index_path(indexed_file)):
             CLI[tool].build(indexed_file, **params)
         if os.path.exists(CLI[tool].index_path(indexed_file)):
             time, mem = CLI[tool].insert(indexed_file, query_file, **params)
-            data[tool] = {"time": time, "mem": mem}
-    data["kmers"] = run_cbl.count(indexed_file, **params)
-    data["bytes"] = get_filesize(indexed_file)
-    data["query_kmers"] = run_cbl.count_query(indexed_file, query_file, **params)
-    data["query_bytes"] = get_filesize(query_file)
-    with open(output, "w+") as f:
-        json.dump(data, f)
+            update_data(output, field=tool, time=time, mem=mem)
+    update_data(
+        output,
+        kmers=run_cbl.count(indexed_file, **params),
+        query_kmers=run_cbl.count_query(indexed_file, query_file, **params),
+    )
 
 
 def remove_stats(indexed_file, query_file, **params):
-    os.makedirs(DATA_FOLDER, exist_ok=True)
     output = query_filename("remove", indexed_file, query_file, **params)
-    data = {"file": indexed_file, "query_file": query_file}
+    update_data(
+        output,
+        file=indexed_file,
+        query_file=query_file,
+        bytes=get_filesize(indexed_file),
+        query_bytes=get_filesize(query_file),
+        k=params["k"],
+        prefix_bits=params["prefix_bits"],
+    )
     for tool in TOOLS["remove"]:
         if not os.path.exists(CLI[tool].index_path(indexed_file)):
             CLI[tool].build(indexed_file, **params)
         if os.path.exists(CLI[tool].index_path(indexed_file)):
             time, mem = CLI[tool].remove(indexed_file, query_file, **params)
-            data[tool] = {"time": time, "mem": mem}
-    data["kmers"] = run_cbl.count(indexed_file, **params)
-    data["bytes"] = get_filesize(indexed_file)
-    data["query_kmers"] = run_cbl.count_query(indexed_file, query_file, **params)
-    data["query_bytes"] = get_filesize(query_file)
-    with open(output, "w+") as f:
-        json.dump(data, f)
+            update_data(output, field=tool, time=time, mem=mem)
+    update_data(
+        output,
+        kmers=run_cbl.count(indexed_file, **params),
+        query_kmers=run_cbl.count_query(indexed_file, query_file, **params),
+    )
 
 
 def merge_stats(indexed_file, other_indexed_file, **params):
-    os.makedirs(DATA_FOLDER, exist_ok=True)
     output = query_filename("merge", indexed_file, other_indexed_file, **params)
-    data = {"file": indexed_file, "other_file": other_indexed_file}
+    update_data(
+        output,
+        file=indexed_file,
+        other_file=other_indexed_file,
+        bytes=get_filesize(indexed_file),
+        query_bytes=get_filesize(other_indexed_file),
+        k=params["k"],
+        prefix_bits=params["prefix_bits"],
+    )
     for tool in TOOLS["merge"]:
         if not os.path.exists(CLI[tool].index_path(indexed_file)):
             CLI[tool].build(indexed_file, **params)
@@ -167,19 +204,25 @@ def merge_stats(indexed_file, other_indexed_file, **params):
             CLI[tool].build(other_indexed_file, **params)
         if os.path.exists(CLI[tool].index_path(indexed_file)) and os.path.exists(CLI[tool].index_path(other_indexed_file)):
             time, mem = CLI[tool].merge(indexed_file, other_indexed_file, **params)
-            data[tool] = {"time": time, "mem": mem}
-    data["kmers"] = run_cbl.count(indexed_file, **params)
-    data["bytes"] = get_filesize(indexed_file)
-    data["query_kmers"] = run_cbl.count_query(indexed_file, other_indexed_file, **params)
-    data["query_bytes"] = get_filesize(other_indexed_file)
-    with open(output, "w+") as f:
-        json.dump(data, f)
+            update_data(output, field=tool, time=time, mem=mem)
+    update_data(
+        output,
+        kmers=run_cbl.count(indexed_file, **params),
+        query_kmers=run_cbl.count_query(indexed_file, other_indexed_file, **params),
+    )
 
 
 def intersect_stats(indexed_file, other_indexed_file, **params):
-    os.makedirs(DATA_FOLDER, exist_ok=True)
     output = query_filename("intersect", indexed_file, other_indexed_file, **params)
-    data = {"file": indexed_file, "other_file": other_indexed_file}
+    update_data(
+        output,
+        file=indexed_file,
+        other_file=other_indexed_file,
+        bytes=get_filesize(indexed_file),
+        query_bytes=get_filesize(other_indexed_file),
+        k=params["k"],
+        prefix_bits=params["prefix_bits"],
+    )
     for tool in TOOLS["intersect"]:
         if not os.path.exists(CLI[tool].index_path(indexed_file)):
             CLI[tool].build(indexed_file, **params)
@@ -187,10 +230,9 @@ def intersect_stats(indexed_file, other_indexed_file, **params):
             CLI[tool].build(other_indexed_file, **params)
         if os.path.exists(CLI[tool].index_path(indexed_file)) and os.path.exists(CLI[tool].index_path(other_indexed_file)):
             time, mem = CLI[tool].intersect(indexed_file, other_indexed_file, **params)
-            data[tool] = {"time": time, "mem": mem}
-    data["kmers"] = run_cbl.count(indexed_file, **params)
-    data["bytes"] = get_filesize(indexed_file)
-    data["query_kmers"] = run_cbl.count_query(indexed_file, other_indexed_file, **params)
-    data["query_bytes"] = get_filesize(other_indexed_file)
-    with open(output, "w+") as f:
-        json.dump(data, f)
+            update_data(output, field=tool, time=time, mem=mem)
+    update_data(
+        output,
+        kmers=run_cbl.count(indexed_file, **params),
+        query_kmers=run_cbl.count_query(indexed_file, other_indexed_file, **params),
+    )
