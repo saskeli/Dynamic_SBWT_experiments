@@ -1,5 +1,3 @@
-# Adapted from https://github.com/jnalanko/SBWT_experiments/blob/master/setup.py
-
 import subprocess
 import struct
 import sys
@@ -47,7 +45,7 @@ def measure_time(command, timeout=TIMEOUT):
     """
     Measure time (in s) and memory usage (in KB) of a command
     """
-    _, err = run_cmd(f"{GNU_TIME} -f '%e %M' {command}", timeout=timeout)
+    _, err = run_cmd(f"{GNU_TIME} -f '%U %M' {command}", timeout=timeout)
     try:
         time_s, mem_kb = err.splitlines()[-1].split()
         return float(time_s), int(mem_kb)
