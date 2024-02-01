@@ -6,7 +6,9 @@ __pycache__
 .DS_Store
 *.fa
 *.gz
+*.zip
 *.cbl
+*.hash
 *.sshash
 *.sbwt
 *.bfi
