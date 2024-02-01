@@ -8,3 +8,11 @@ bash install_bufboss.sh
 bash install_dynboss.sh
 bash install_sbwt.sh
 bash install_sshash.sh
+
+cd CBL
+cargo +nightly build --release
+cd ..
+
+cd hashset
+cargo +nightly build --release
+cd ..
