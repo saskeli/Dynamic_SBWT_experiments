@@ -18,7 +18,7 @@ The installation script is written for Debian-based distributions.
 If you are using something else, you should change `install_apt_dependencies.sh` to use the package manager of your choice.
 
 If you have not installed Rust yet, please visit [rustup.rs](https://rustup.rs/) to install it.
-Then install the latest nightly version with
+Then install the latest nightly version (1.77+ required) with
 ```sh
 rustup install nightly
 ```
