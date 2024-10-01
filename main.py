@@ -8,13 +8,14 @@ FOF_BUILD = "fof_build.txt"
 FOF_QUERY = "fof_query.txt"
 BUILD = []
 QUERY = []
+path_prefix = "data/"
 
 
 if __name__ == "__main__":
     if os.path.exists(FOF_BUILD):
         with open(FOF_BUILD, "r") as f:
             for line in f:
-                filename = line.strip()
+                filename = path_prefix + line.strip()
                 if filename:
                     assert os.path.exists(filename), f"Cannot find {filename}"
                     BUILD.append(filename)
@@ -24,7 +25,7 @@ if __name__ == "__main__":
     if os.path.exists(FOF_QUERY):
         with open(FOF_QUERY, "r") as f:
             for line in f:
-                filename = line.strip()
+                filename = path_prefix + line.strip()
                 if filename:
                     assert os.path.exists(filename), f"Cannot find {filename}"
                     QUERY.append(filename)

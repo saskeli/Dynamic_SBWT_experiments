@@ -120,6 +120,9 @@ def plot_task(task, ykey, xkey, name=None):
         X, Y = [], []
         for d in DATA[task]:
             if tool in d and ykey in d[tool] and d[tool][ykey] != float("inf"):
+                if xkey not in d:
+                    print(xkey, "not in dictionary for", tool, task)
+                    continue
                 X.append(d[xkey])
                 if ykey == "mem":
                     Y.append(d[tool][ykey] / 1000)
@@ -156,6 +159,9 @@ def plot_pareto(task, threshold=0, name=None):
     for tool in tools:
         X, Y = [], []
         for d in DATA[task]:
+            if task in SINGLE_TASKS and "kmers" not in d:
+                print("!!kmers not in dictionary for", tool, task)
+                continue
             n = d["kmers" if task in SINGLE_TASKS else "query_kmers"]
             if n > threshold and tool in d and d[tool]["time"] != float("inf"):
                 X.append(d[tool]["mem"] * 8000 / n)
