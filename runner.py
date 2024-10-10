@@ -5,9 +5,7 @@ import run_bifrost
 import run_bufboss
 import run_cbl
 import run_dynboss
-import run_hashset
 import run_sbwt
-import run_sshash
 
 
 DATA_FOLDER = "data"
@@ -16,19 +14,17 @@ CLI = {
     "BufBOSS": run_bufboss,
     "CBL": run_cbl,
     "DynamicBOSS": run_dynboss,
-    "HashSet": run_hashset,
     "SBWT": run_sbwt,
-    "SSHash": run_sshash,
 }
 TOOLS = {
-    "build": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "BufBOSS", "DynamicBOSS"],
-    "size": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "DynamicBOSS"],
-    "query_self": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "BufBOSS"],
-    "query_other": ["CBL", "HashSet", "SSHash", "SBWT", "Bifrost", "BufBOSS"],
-    "insert": ["CBL", "HashSet", "Bifrost", "BufBOSS"],
-    "remove": ["CBL", "HashSet", "BufBOSS"],
-    "merge": ["CBL", "HashSet"],
-    "intersect": ["CBL", "HashSet"],
+    "build": ["CBL", "SBWT", "Bifrost", "BufBOSS", "DynamicBOSS"],
+    "size": ["CBL", "SBWT", "Bifrost", "DynamicBOSS"],
+    "query_self": ["CBL", "SBWT", "Bifrost", "BufBOSS"],
+    "query_other": ["CBL", "SBWT", "Bifrost", "BufBOSS"],
+    "insert": ["CBL", "Bifrost", "BufBOSS"],
+    "remove": ["CBL", "BufBOSS"],
+    "merge": ["CBL"],
+    "intersect": ["CBL"],
 }
 
 
