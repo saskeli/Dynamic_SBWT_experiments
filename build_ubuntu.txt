@@ -1,0 +1,21 @@
+Bootstrap: library
+From: library/default/ubuntu:jammy
+
+%post
+
+apt update
+
+apt install -y curl cmake gcc build-essential zlib1g-dev libstdc++-12-dev libclang-dev git python3-dev libz-dev
+
+mkdir rust
+
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | RUSTUP_HOME=./rust sh -s -- -y --profile minimal --default-toolchain 1.81.0 --no-modify-path
+
+%environment
+
+export PATH=/rust/toolchains/stable-x86_64-unknown-linux-gnu/bin:$PATH
+
+%runscript
+
+pwd
+ls -h

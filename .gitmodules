@@ -7,3 +7,6 @@
 [submodule "bufboss"]
 	path = bufboss
 	url = https://github.com/jnalanko/bufboss.git
+[submodule "BBB"]
+	path = BBB
+	url = git@github.com:saskeli/BBB.git
