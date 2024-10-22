@@ -10,6 +10,3 @@
 [submodule "BBB"]
 	path = BBB
 	url = git@github.com:saskeli/BBB.git
-[submodule "ggcat"]
-	path = ggcat
-	url = https://github.com/algbio/ggcat.git
