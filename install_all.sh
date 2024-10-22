@@ -6,6 +6,7 @@ cd bifrost
 mkdir -p build
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=.
+cd ../..
 
 #bufboss
 cd bufboss

@@ -17,5 +17,4 @@ export PATH=/rust/toolchains/stable-x86_64-unknown-linux-gnu/bin:$PATH
 
 %runscript
 
-pwd
-ls -h
+$@
