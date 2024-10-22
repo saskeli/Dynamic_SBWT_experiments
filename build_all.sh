@@ -14,7 +14,10 @@ cd ..
 cd stxxl/build
 make -j
 make install
-cd ../..
+cd -
+cd sdsl-lite/build
+make -j
+cd -
 make -j all
 cd ..
 
