@@ -24,7 +24,7 @@ OUT_FOLDER=$3
 
 mkdir -p ${OUT_FOLDER}
 
-for i in 2 4 8 16 32; do
+for i in 2 4 8 16 32 64 128 256 512 1024; do
   if [ ! -f ${OUT_FOLDER}/${i}.unitigs.fa ]; then
     head -n ${i} ${FOF} | while read line ; do echo "${DATA_FOLDER}/${line}"; done > tmp.txt
     bcalm/build/bcalm -in tmp.txt -verbose 0 -kmer-size 31 -abundance-min 1 -out ${OUT_FOLDER}/${i} 
@@ -39,7 +39,7 @@ export LIBRARY_PATH=${LIBRARY_PATH-""}:./bifrost/build/lib/
 export PATH=$PATH:./bifrost/build/lib/
 MAX_THREADS=$(nproc)
 
-for i in 2 4 8 16 32; do
+for i in 2 4 8 16 32 64 128 256 512 1024; do
   echo ${OUT_FOLDER}/${i}.unitigs.fa > tmp.txt
   
   /usr/bin/time CBL/target/release/examples/cbl build ${OUT_FOLDER}/${i}.unitigs.fa -o ${OUT_FOLDER}/${i}.cbl
