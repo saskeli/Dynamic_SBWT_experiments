@@ -1,52 +1,43 @@
-# CBL experiments
+# CBL experiments fork
 
-Experiments for the [CBL](https://github.com/imartayan/CBL) paper
+Forked from the experiment repo for the [CBL](https://github.com/imartayan/CBL) paper
 
-You can clone the repository and its submodules with
+For running tests you should clone with 
 ```sh
-git clone --recursive https://github.com/imartayan/CBL_experiments.git
+git clone --recurse-submodules --depth=1 --shallow-submodules https://github.com/saskeli/CBL_experiments.git
 ```
 
-If you did not use the `--recursive` flag, make sure to load the submodules with
-```sh
-git submodule update --init --recursive
+## Usage
+
+The intention is to use a Singularity-CE container for running all experiments and builds to eliminate as many requirements as possible for the host system.
+
+The only thing you need to have installed on the host system is [singularity-ce](https://github.com/sylabs/singularity).
+
+Download data needed for experiments from [NCBI](https://www.ncbi.nlm.nih.gov/). Files are specified in `fof_build.txt` and `fof_query.txt`. There is probably a very good and convenient way to batch download them. But I'm lazy and wrote a script that can be used like this:
+```bash
+mkdir -p data
+python3 ../downloader.py ../fof_build.txt
+python3 ../downloader.py ../fof_query.txt
 ```
 
-## Setup
-
-The installation script is written for Debian-based distributions.
-If you are using something else, you should change `install_apt_dependencies.sh` to use the package manager of your choice.
-
-If you have not installed Rust yet, please visit [rustup.rs](https://rustup.rs/) to install it.
-Then install the latest nightly version (1.77+ required) with
-```sh
-rustup install nightly
+Build the singularity container with
+```bash
+singularity build --fakeroot ubuntu.sif build_ubuntu.txt 
 ```
 
-Once this is done, you can build all the tools with
-```sh
-bash install_all.sh
+Run all cmakes and download dependencies with
+```bash
+singularity run --userns ./ubuntu.sif ./install_all.sh
 ```
 
-## Running the experiments
-
-The experiments are divided into two parts: building indexes from FASTA files and querying these indexes.
-The files to build must be written in `fof_build.txt` (one file per line) and those to query in `fof_query.txt` (one file per line, each linked to the corresponding line in `fof_build.txt`).
-
-The files currently listed in `fof_build.txt` and `fof_query.txt` can be downloaded from the [NCBI database](https://www.ncbi.nlm.nih.gov/).
-
-You can run all the experiments with
-```sh
-python3 main.py
+Build all binaries with
+```bash
+singularity run --userns ./ubuntu.sif ./build_all.sh
 ```
 
-This will write the results of the experiments in the `data` folder, please leave it untouched if you want to generate plots with them.
-
-## Generating the plots
-
-You can generate all the plots with
-```sh
-python3 plots.py
+Build indexes can be done with he following. (here piping the output to exp.txt).
+```bash
+singularity run --userns ./ubuntu.sif ./build_expanding.sh fof_build.txt data out &> exp.txt
 ```
 
-This will save the plots in the `plot` folder, and create an archive from it.
+Results are parsed and plots drawn with the `expanding.ipynb` jupyter notebook.

@@ -24,3 +24,15 @@ cd ..
 #BBB
 cd BBB/build
 cmake .. -DMAX_KMER_LENGTH=31
+cd -
+
+#CBL apparently with 2 builds since there is no way to just download dependences.
+cd CBL
+K=31 cargo build --release --examples
+cd ..
+
+#bcalm for unitigs
+mkdir -p bcalm/build
+cd bcalm/build
+cmake ..
+cd -

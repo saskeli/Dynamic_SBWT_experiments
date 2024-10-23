@@ -28,5 +28,11 @@ cd ../..
 
 #CBL
 cd CBL
-K=31 cargo build --release --examples
+cargo clean && K=31 cargo build --release --examples
 cd ..
+
+#BCALM
+
+cd bcalm/build
+make -j
+cd -

@@ -10,3 +10,6 @@
 [submodule "BBB"]
 	path = BBB
 	url = git@github.com:saskeli/BBB.git
+[submodule "bcalm"]
+	path = bcalm
+	url = https://github.com/GATB/bcalm.git
