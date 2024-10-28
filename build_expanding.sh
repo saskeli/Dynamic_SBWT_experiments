@@ -38,6 +38,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bifrost/build/lib/
 export LIBRARY_PATH=${LIBRARY_PATH-""}:./bifrost/build/lib/
 export PATH=$PATH:./bifrost/build/lib/
 MAX_THREADS=$(nproc)
+MAX_THREADS=$((MAX_THREADS > 32 ? 32 : MAX_TREADS))
 
 for i in 2 4 8 16 32 64 128 256 512 1024; do
   echo ${OUT_FOLDER}/${i}.unitigs.fa > tmp.txt
@@ -48,7 +49,9 @@ for i in 2 4 8 16 32 64 128 256 512 1024; do
   /usr/bin/time BBB/build/bin/buffer -r -n -t 1 tmp.txt ${OUT_FOLDER}/${i}.sbwt 
   echo "threads = ${MAX_THREADS}"
   /usr/bin/time bifrost/build/bin/Bifrost build -r ${OUT_FOLDER}/${i}.unitigs.fa -o ${OUT_FOLDER}/${i}.bifrost -k 31 -t $MAX_THREADS
-  /usr/bin/time BBB/build/bin/buffer -r -n -m 10 -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -n -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_a.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -n -m 4 -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_b.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -n -m 30 -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_c.sbwt 
 
   rm tmp.txt
 done
