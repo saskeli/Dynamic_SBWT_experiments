@@ -14,6 +14,9 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | RUSTUP_HOME=./rust s
 %environment
 
 export PATH=/rust/toolchains/nightly-2024-10-10-x86_64-unknown-linux-gnu/bin:$PATH
+export LD_LIBRARY_PATH=~/CBL_experiments/bifrost/build/lib/
+export LIBRARY_PATH=~/CBL_experiments/bifrost/build/lib/
+export PATH=$PATH:~/CBL_experiments/bifrost/build/lib/
 
 %runscript
 

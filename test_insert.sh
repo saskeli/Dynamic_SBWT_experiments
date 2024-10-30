@@ -37,10 +37,6 @@ DATA_FOLDER=$2
 OUT_FOLDER=$3
 FILE_LIMIT=$(($# > 3 ? $4 : 1024))
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bifrost/build/lib/
-export LIBRARY_PATH=${LIBRARY_PATH-""}:./bifrost/build/lib/
-export PATH=$PATH:./bifrost/build/lib/
-
 MAX_THREADS=$(nproc)
 MAX_THREADS=$((MAX_THREADS > 32 ? 32 : MAX_TREADS))
 
@@ -62,14 +58,16 @@ while [ $i -lt $FILE_LIMIT ]; do
   echo $FN > tmp.txt
   
   /usr/bin/time CBL/target/release/examples/cbl insert ${OUT_FOLDER}/${i}.cbl ${FN} -o ${OUT_FOLDER}/tmp.cbl
-  /usr/bin/time bufboss/bin/bufboss_build -a ${FN} -o ${OUT_FOLDER}/${i}.bufboss -k 31 -t tmp
-  /usr/bin/time bifrost/build/bin/Bifrost build -r ${FN} -o ${OUT_FOLDER}/${i}.bifrost -k 31 -t 1
-  /usr/bin/time BBB/build/bin/buffer -r -n -t 1 tmp.txt ${OUT_FOLDER}/${i}.sbwt 
+  # We need reverse complements for bufboss?
+  /usr/bin/time bufboss/bin/bufboss_update -i ${OUT_FOLDER}/${i}.bufboss -a ${FN} -o ${OUT_FOLDER}/tmp.bufboss
+  /usr/bin/time bifrost/build/bin/Bifrost update -g ${OUT_FOLDER}/${i}.bifrost -r ${FN} -o ${OUT_FOLDER}/tmp.bifrost -t 1
+  /usr/bin/time BBB/build/bin/buffer -r -n -t 1 ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
   echo "threads = ${MAX_THREADS}"
-  /usr/bin/time bifrost/build/bin/Bifrost build -r ${FN} -o ${OUT_FOLDER}/${i}.bifrost -k 31 -t $MAX_THREADS
-  /usr/bin/time BBB/build/bin/buffer -r -n -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_a.sbwt 
-  /usr/bin/time BBB/build/bin/buffer -r -n -m 4 -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_b.sbwt 
-  /usr/bin/time BBB/build/bin/buffer -r -n -m 30 -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_c.sbwt 
+  /usr/bin/time bifrost/build/bin/Bifrost update -g ${OUT_FOLDER}/${i}.bifrost -r ${FN} -o ${OUT_FOLDER}/tmp.bifrost -t $MAX_THREADS
+  /usr/bin/time BBB/build/bin/buffer -r -n -t $MAX_THREADS ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -n -m 4 -t $MAX_THREADS ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -n -m 30 -t $MAX_THREADS ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
 
-  rm -f tmp.txt tmp.${FEXT} tmp.${ext} tmp.cbl
+  rm -f tmp.txt ${OUT_FOLDER}/tmp.${FEXT} ${OUT_FOLDER}/tmp.${ext} ${OUT_FOLDER}/tmp.cbl ${OUT_FOLDER}/tmp.bifrost ${OUT_FOLDER}/tmp.sbwt
+  rm -rf ${OUT_FOLDER}/tmp.bufboss
 done

@@ -16,6 +16,7 @@ The only thing you need to have installed on the host system is [singularity-ce]
 Download data needed for experiments from [NCBI](https://www.ncbi.nlm.nih.gov/). Files are specified in `fof_build.txt` and `fof_query.txt`. There is probably a very good and convenient way to batch download them. But I'm lazy and wrote a script that can be used like this:
 ```bash
 mkdir -p data
+cd data
 python3 ../downloader.py ../fof_build.txt
 python3 ../downloader.py ../fof_query.txt
 ```

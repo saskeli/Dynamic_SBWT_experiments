@@ -52,9 +52,6 @@ done
 
 rm -f ${OUT_FOLDER}/*glue*
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bifrost/build/lib/
-export LIBRARY_PATH=${LIBRARY_PATH-""}:./bifrost/build/lib/
-export PATH=$PATH:./bifrost/build/lib/
 MAX_THREADS=$(nproc)
 MAX_THREADS=$((MAX_THREADS > 32 ? 32 : MAX_THREADS))
 
