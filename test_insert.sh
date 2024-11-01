@@ -9,7 +9,7 @@ The index files should have been created with build_expanding to make sure that 
 where:
     file_list    is a text file containing the names of fasta files to use.
     data_folder  is the folder containing the fasta files.
-    output_foder is the directory to write unitigs and indexes to.
+    output_foder is the directory where indexes are.
     limit        maximum number of genomes the indexes are built of. Default: 1024.
     
 All arguments, besides the limit are required
@@ -23,9 +23,11 @@ fi
 
 BLA=$(head -n 1 $1)
 EXT=${BLA##*.}
+FEXT=$EXT
 if [ "$EXT" = "gz" ]; then
     FN=${BLA%.*}
-    EXT="${FN##*.}.$EXT"
+    FEXT=${FN##*.}
+    EXT=${FEXT}.${EXT}
 fi
 
 echo "file extenstion: $EXT"
@@ -38,7 +40,8 @@ OUT_FOLDER=$3
 FILE_LIMIT=$(($# > 3 ? $4 : 1024))
 
 MAX_THREADS=$(nproc)
-MAX_THREADS=$((MAX_THREADS > 32 ? 32 : MAX_TREADS))
+MAX_THREADS=$((MAX_THREADS > 32 ? 32 : MAX_THREADS))
+MAX_MEM=$(free -g | awk '/^Mem:/{print int($2 * 0.9)}')
 
 i=1
 while [ $i -lt $FILE_LIMIT ]; do
@@ -59,15 +62,17 @@ while [ $i -lt $FILE_LIMIT ]; do
   
   /usr/bin/time CBL/target/release/examples/cbl insert ${OUT_FOLDER}/${i}.cbl ${FN} -o ${OUT_FOLDER}/tmp.cbl
   # We need reverse complements for bufboss?
-  /usr/bin/time bufboss/bin/bufboss_update -i ${OUT_FOLDER}/${i}.bufboss -a ${FN} -o ${OUT_FOLDER}/tmp.bufboss
-  /usr/bin/time bifrost/build/bin/Bifrost update -g ${OUT_FOLDER}/${i}.bifrost -r ${FN} -o ${OUT_FOLDER}/tmp.bifrost -t 1
-  /usr/bin/time BBB/build/bin/buffer -r -n -t 1 ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
+  #/usr/bin/time bufboss/bin/bufboss_update -i ${OUT_FOLDER}/${i}.bufboss -a ${FN} -o ${OUT_FOLDER}/tmp.bufboss
+  /usr/bin/time bifrost/build/bin/Bifrost update -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -r ${FN} -o ${OUT_FOLDER}/tmp.bifrost -t 1
+  /usr/bin/time BBB/build/bin/buffer -r -t 1 ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
   echo "threads = ${MAX_THREADS}"
-  /usr/bin/time bifrost/build/bin/Bifrost update -g ${OUT_FOLDER}/${i}.bifrost -r ${FN} -o ${OUT_FOLDER}/tmp.bifrost -t $MAX_THREADS
-  /usr/bin/time BBB/build/bin/buffer -r -n -t $MAX_THREADS ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
-  /usr/bin/time BBB/build/bin/buffer -r -n -m 4 -t $MAX_THREADS ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
-  /usr/bin/time BBB/build/bin/buffer -r -n -m 30 -t $MAX_THREADS ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
+  /usr/bin/time bifrost/build/bin/Bifrost update -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -r ${FN} -o ${OUT_FOLDER}/tmp.bifrost -t $MAX_THREADS
+  /usr/bin/time BBB/build/bin/buffer -r -t $MAX_THREADS ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
+  MEM=$((MAX_MEM > 4 ? 4 : MAX_MEM))
+  /usr/bin/time BBB/build/bin/buffer -r -m $MEM -t $MAX_THREADS ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
+  MEM=$((MAX_MEM > 30 ? 30 : MAX_MEM))
+  /usr/bin/time BBB/build/bin/buffer -r -m $MEM -t $MAX_THREADS ${OUT_FOLDER}/${i}.sbwt tmp.txt ${OUT_FOLDER}/tmp.sbwt 
 
-  rm -f tmp.txt ${OUT_FOLDER}/tmp.${FEXT} ${OUT_FOLDER}/tmp.${ext} ${OUT_FOLDER}/tmp.cbl ${OUT_FOLDER}/tmp.bifrost ${OUT_FOLDER}/tmp.sbwt
+  rm -f tmp.txt ${OUT_FOLDER}/tmp.${FEXT} ${OUT_FOLDER}/tmp.${EXT} ${OUT_FOLDER}/tmp.cbl ${OUT_FOLDER}/tmp.bifrost.gfa.gz ${OUT_FOLDER}/tmp.sbwt
   rm -rf ${OUT_FOLDER}/tmp.bufboss
 done

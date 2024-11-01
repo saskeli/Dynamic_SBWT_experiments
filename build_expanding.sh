@@ -39,7 +39,8 @@ done
 rm -f ${OUT_FOLDER}/*glue*
 
 MAX_THREADS=$(nproc)
-MAX_THREADS=$((MAX_THREADS > 32 ? 32 : MAX_TREADS))
+MAX_THREADS=$((MAX_THREADS > 32 ? 32 : MAX_THREADS))
+MAX_MEM=$(free -g | awk '/^Mem:/{print ($2 * 0.9)}')
 
 i=1
 while [ $i -lt $FILE_LIMIT ]; do
@@ -55,8 +56,8 @@ while [ $i -lt $FILE_LIMIT ]; do
   echo "threads = ${MAX_THREADS}"
   /usr/bin/time bifrost/build/bin/Bifrost build -r ${FN} -o ${OUT_FOLDER}/${i}.bifrost -k 31 -t $MAX_THREADS
   /usr/bin/time BBB/build/bin/buffer -r -n -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_a.sbwt 
-  /usr/bin/time BBB/build/bin/buffer -r -n -m 4 -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_b.sbwt 
-  /usr/bin/time BBB/build/bin/buffer -r -n -m 30 -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_c.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -n -m $((MAX_MEM > 4 ? 4 : MAX_MEM)) -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_b.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -n -m $((MAX_MEM > 30 ? 30 : MAX_MEM)) -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_c.sbwt 
 
   rm tmp.txt
 done
