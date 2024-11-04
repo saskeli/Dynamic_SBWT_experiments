@@ -17,8 +17,7 @@ Download data needed for experiments from [NCBI](https://www.ncbi.nlm.nih.gov/).
 ```bash
 mkdir -p data
 cd data
-python3 ../downloader.py ../fof_build.txt
-python3 ../downloader.py ../fof_query.txt
+python3 ../downloader.py ../fof.txt
 ```
 
 Build the singularity container with
