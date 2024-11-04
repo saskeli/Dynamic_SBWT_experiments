@@ -24,6 +24,7 @@ cd ..
 #BBB
 cd BBB/build
 make -j buffer
+make -j search
 cd ../..
 
 #CBL

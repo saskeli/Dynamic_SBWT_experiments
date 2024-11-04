@@ -49,7 +49,7 @@ while [ $i -lt $FILE_LIMIT ]; do
   FN=${OUT_FOLDER}/${i}.unitigs.fa
   echo $FN > tmp.txt
   
-  /usr/bin/time CBL/target/release/examples/cbl build ${FN} -o ${OUT_FOLDER}/${i}.cbl
+  /usr/bin/time CBL/target/release/examples/cbl build -c ${FN} -o ${OUT_FOLDER}/${i}.cbl
   /usr/bin/time bufboss/bin/bufboss_build -a ${FN} -o ${OUT_FOLDER}/${i}.bufboss -k 31 -t tmp
   /usr/bin/time bifrost/build/bin/Bifrost build -r ${FN} -o ${OUT_FOLDER}/${i}.bifrost -k 31 -t 1
   /usr/bin/time BBB/build/bin/buffer -r -n -t 1 tmp.txt ${OUT_FOLDER}/${i}.sbwt 

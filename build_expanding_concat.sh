@@ -54,7 +54,7 @@ rm -f ${OUT_FOLDER}/*glue*
 
 MAX_THREADS=$(nproc)
 MAX_THREADS=$((MAX_THREADS > 32 ? 32 : MAX_THREADS))
-MAX_MEM=$(free -g | awk '/^Mem:/{print ($2 * 0.9)}')
+MAX_MEM=$(free -g | awk '/^Mem:/{print int($2 * 0.9)}')
 
 i=1
 while [ $i -lt $FILE_LIMIT ]; do
@@ -63,15 +63,15 @@ while [ $i -lt $FILE_LIMIT ]; do
   FN=${OUT_FOLDER}/${i}.concat.${FEXT}
   echo $FN > tmp.txt
   
-  /usr/bin/time CBL/target/release/examples/cbl build ${FN} -o ${OUT_FOLDER}/${i}_concat.cbl
-  /usr/bin/time bufboss/bin/bufboss_build -a ${FN} -o ${OUT_FOLDER}/${i}_concat.bufboss -k 31 -t tmp
-  /usr/bin/time bifrost/build/bin/Bifrost build -r ${FN} -o ${OUT_FOLDER}/${i}_concat.bifrost -k 31 -t 1
-  /usr/bin/time BBB/build/bin/buffer -r -t 1 tmp.txt ${OUT_FOLDER}/${i}_concat.sbwt 
+  /usr/bin/time CBL/target/release/examples/cbl build -c ${FN} -o ${OUT_FOLDER}/${i}.cbl
+  /usr/bin/time bufboss/bin/bufboss_build -a ${FN} -o ${OUT_FOLDER}/${i}.bufboss -k 31 -t tmp
+  /usr/bin/time bifrost/build/bin/Bifrost build -r ${FN} -o ${OUT_FOLDER}/${i}.bifrost -k 31 -t 1
+  /usr/bin/time BBB/build/bin/buffer -r -t 1 tmp.txt ${OUT_FOLDER}/${i}.sbwt 
   echo "threads = ${MAX_THREADS}"
-  /usr/bin/time bifrost/build/bin/Bifrost build -r ${FN} -o ${OUT_FOLDER}/${i}_concat.bifrost -k 31 -t $MAX_THREADS
-  /usr/bin/time BBB/build/bin/buffer -r -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_concat_a.sbwt 
-  /usr/bin/time BBB/build/bin/buffer -r -m $((MAX_MEM > 4 ? 4 : MAX_MEM)) -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_concat_b.sbwt 
-  /usr/bin/time BBB/build/bin/buffer -r -m $((MAX_MEM > 30 ? 30 : MAX_MEM)) -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_concat_c.sbwt 
+  /usr/bin/time bifrost/build/bin/Bifrost build -r ${FN} -o ${OUT_FOLDER}/${i}.bifrost -k 31 -t $MAX_THREADS
+  /usr/bin/time BBB/build/bin/buffer -r -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_a.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -m $((MAX_MEM > 4 ? 4 : MAX_MEM)) -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_b.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -m $((MAX_MEM > 30 ? 30 : MAX_MEM)) -t $MAX_THREADS tmp.txt ${OUT_FOLDER}/${i}_c.sbwt 
 
   rm tmp.txt
 done
