@@ -20,7 +20,10 @@ fi
 FOF=$1
 DATA_FOLDER=$2
 OUT_FOLDER=$3
-FILE_LIMIT=$(($# > 3 ? $4 : 1024))
+FILE_LIMIT=1024
+if [ $# -gt 3 ]; then 
+    FILE_LIMIT=$4
+fi
 
 set -euxo pipefail
 
@@ -30,9 +33,9 @@ i=1
 while [ $i -lt $FILE_LIMIT ]; do
   i=$(($i * 2))
   if [ ! -f ${OUT_FOLDER}/${i}.unitigs.fa ]; then
-    head -n ${i} ${FOF} | while read line ; do echo "${DATA_FOLDER}/${line}"; done > ${OUT_FOLDER}/tmp.txt
-    bcalm/build/bcalm -in ${OUT_FOLDER}/tmp.txt -verbose 0 -kmer-size 31 -abundance-min 1 -out ${OUT_FOLDER}/${i} 
-    rm ${OUT_FOLDER}/tmp.txt
+    head -n ${i} ${FOF} | while read line ; do echo "${DATA_FOLDER}/${line}"; done > u_tmp.txt
+    bcalm/build/bcalm -in u_tmp.txt -verbose 0 -kmer-size 31 -abundance-min 1 -out ${OUT_FOLDER}/${i} 
+    rm u_tmp.txt
   fi 
 done
 
@@ -40,7 +43,7 @@ rm -f ${OUT_FOLDER}/*glue*
 
 MAX_THREADS=$(nproc)
 MAX_THREADS=$((MAX_THREADS > 32 ? 32 : MAX_THREADS))
-MAX_MEM=$(free -g | awk '/^Mem:/{print ($2 * 0.9)}')
+MAX_MEM=$(free -g | awk '/^Mem:/{print int($2 * 0.9)}')
 
 i=1
 while [ $i -lt $FILE_LIMIT ]; do

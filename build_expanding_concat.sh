@@ -31,7 +31,10 @@ echo "file extenstion: $EXT"
 FOF=$1
 DATA_FOLDER=$2
 OUT_FOLDER=$3
-FILE_LIMIT=$(($# > 3 ? $4 : 1024))
+FILE_LIMIT=1024
+if [ $# -gt 3 ]; then 
+    FILE_LIMIT=$4
+fi
 
 set -euxo pipefail
 
