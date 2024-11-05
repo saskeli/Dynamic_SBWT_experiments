@@ -32,12 +32,12 @@ fi
 
 echo "file extenstion: $EXT"
 
-set -euxo pipefail
-
 FOF=$1
 DATA_FOLDER=$2
 OUT_FOLDER=$3
 FILE_LIMIT=$(($# > 3 ? $4 : 1024))
+
+set -euxo pipefail
 
 MAX_THREADS=$(nproc)
 MAX_THREADS=$((MAX_THREADS > 32 ? 32 : MAX_THREADS))
@@ -51,7 +51,7 @@ if [ ! -f $FN ]; then
   fi
 fi
 
-echo $FN > tmp.txt
+echo $FN > ${OUT_FOLDER}/tmp.txt
 
 i=1
 while [ $i -lt $FILE_LIMIT ]; do
@@ -61,11 +61,11 @@ while [ $i -lt $FILE_LIMIT ]; do
   # We need reverse complements for bufboss?
   /usr/bin/time bufboss/bin/bufboss_query -i ${OUT_FOLDER}/${i}.bufboss -q ${FN} -o /dev/null
   /usr/bin/time bifrost/build/bin/Bifrost query -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -q ${FN} -o ${OUT_FOLDER}/tmp -t 1
-  /usr/bin/time BBB/build/bin/search ${OUT_FOLDER}/${i}.sbwt tmp.txt
+  /usr/bin/time BBB/build/bin/search ${OUT_FOLDER}/${i}.sbwt ${OUT_FOLDER}/tmp.txt
   echo "threads = ${MAX_THREADS}"
   /usr/bin/time bifrost/build/bin/Bifrost query -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -q ${FN} -o ${OUT_FOLDER}/tmp -t $MAX_THREADS
 
   rm -f ${OUT_FOLDER}/tmp.tsv 
 done
 
-rm -f tmp.txt ${OUT_FOLDER}/tmp.${EXT} ${OUT_FOLDER}/tmp.${FEXT}
+rm -f ${OUT_FOLDER}/tmp.txt ${OUT_FOLDER}/tmp.${EXT} ${OUT_FOLDER}/tmp.${FEXT}
