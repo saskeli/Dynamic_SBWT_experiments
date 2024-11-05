@@ -2,6 +2,7 @@ data/
 uni/
 coli/
 concat/
+tmp/
 coli3682_dataset/
 __pycache__
 .DS_Store
