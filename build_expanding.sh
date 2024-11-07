@@ -13,8 +13,8 @@ All arguments, besides the limit are required
 Example $0 fof_build.txt data out"
 
 if [ $# -lt 3 ]; then
-    echo "$USAGE"
-    exit 1
+  echo "$USAGE"
+  exit 1
 fi
 
 FOF=$1
@@ -22,7 +22,7 @@ DATA_FOLDER=$2
 OUT_FOLDER=$3
 FILE_LIMIT=1024
 if [ $# -gt 3 ]; then 
-    FILE_LIMIT=$4
+  FILE_LIMIT=$4
 fi
 
 set -euxo pipefail
