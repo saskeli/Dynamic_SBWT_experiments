@@ -3,6 +3,7 @@ uni/
 coli/
 concat/
 tmp/
+unitigs/
 coli3682_dataset/
 __pycache__
 .DS_Store
@@ -18,3 +19,4 @@ __pycache__
 *.tsv
 *.log
 *.errlog
+*.out

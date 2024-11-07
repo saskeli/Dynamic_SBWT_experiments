@@ -58,9 +58,9 @@ while [ $i -lt $FILE_LIMIT ]; do
   /usr/bin/time BBB/build/bin/buffer -r -n -t 1 ${OUT_FOLDER}/tmp.txt ${OUT_FOLDER}/${i}.sbwt 
   echo "threads = ${MAX_THREADS}"
   /usr/bin/time bifrost/build/bin/Bifrost build -r ${FN} -o ${OUT_FOLDER}/${i}.bifrost -k 31 -t $MAX_THREADS
-  /usr/bin/time BBB/build/bin/buffer -r -n -t $MAX_THREADS ${OUT_FOLDER}/tmp.txt ${OUT_FOLDER}/${i}_a.sbwt 
-  /usr/bin/time BBB/build/bin/buffer -r -n -m $((MAX_MEM > 4 ? 4 : MAX_MEM)) -t $MAX_THREADS ${OUT_FOLDER}/tmp.txt ${OUT_FOLDER}/${i}_b.sbwt 
-  /usr/bin/time BBB/build/bin/buffer -r -n -m $((MAX_MEM > 30 ? 30 : MAX_MEM)) -t $MAX_THREADS ${OUT_FOLDER}/tmp.txt ${OUT_FOLDER}/${i}_c.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -n -t $((MAX_THREADS > 4 ? 4 : MAX_THREADS)) ${OUT_FOLDER}/tmp.txt ${OUT_FOLDER}/${i}.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -n -m $((MAX_MEM > 4 ? 4 : MAX_MEM)) -t $((MAX_THREADS > 16 ? 16 : MAX_THREADS)) ${OUT_FOLDER}/tmp.txt ${OUT_FOLDER}/${i}.sbwt 
+  /usr/bin/time BBB/build/bin/buffer -r -n -m $((MAX_MEM > 30 ? 30 : MAX_MEM)) -t $MAX_THREADS ${OUT_FOLDER}/tmp.txt ${OUT_FOLDER}/${i}.sbwt 
 
   rm ${OUT_FOLDER}/tmp.txt
 done
