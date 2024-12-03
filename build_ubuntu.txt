@@ -5,7 +5,7 @@ From: library/default/ubuntu:jammy
 
 apt update
 
-apt install -y curl cmake gcc build-essential zlib1g-dev libstdc++-12-dev libclang-dev git python3-dev libz-dev time
+apt install -y curl cmake gcc build-essential zlib1g-dev libstdc++-12-dev libclang-dev git python3-dev libz-dev time binutils
 
 mkdir rust
 

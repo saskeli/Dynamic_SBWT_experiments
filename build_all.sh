@@ -21,11 +21,10 @@ cd -
 make -j all
 cd ..
 
-#BBB
-cd BBB/build
-make -j buffer
-make -j search
-cd ../..
+#Buffered_SBWT
+cd Buffered_SBWT
+make -j fast
+cd ..
 
 #CBL
 cd CBL

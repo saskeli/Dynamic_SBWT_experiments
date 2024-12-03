@@ -7,9 +7,9 @@
 [submodule "bufboss"]
 	path = bufboss
 	url = https://github.com/jnalanko/bufboss.git
-[submodule "BBB"]
-	path = BBB
-	url = git@github.com:saskeli/BBB.git
 [submodule "bcalm"]
 	path = bcalm
 	url = https://github.com/GATB/bcalm.git
+[submodule "Buffered_SBWT"]
+	path = Buffered_SBWT
+	url = git@github.com:saskeli/Buffered_SBWT.git

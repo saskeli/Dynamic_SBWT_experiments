@@ -2,7 +2,7 @@
 
 USAGE="$0 <file_list> <data_folder> <output_folder> <limit> 
 
-Search with files from <file_list>, that can be found in <data_folder> from indexes found in <output_folder>.
+Delete with files from <file_list>, that can be found in <data_folder> from indexes found in <output_folder>.
 
 The index file names should match those created with build_expanding.
 
@@ -44,6 +44,7 @@ set -euxo pipefail
 
 MAX_THREADS=$(nproc)
 MAX_THREADS=$((MAX_THREADS > 32 ? 32 : MAX_THREADS))
+MAX_MEM=$(free -g | awk '/^Mem:/{print int($2 * 0.9)}')
 
 FN=${OUT_FOLDER}/tmp.${FEXT}
 GFN=${OUT_FOLDER}/tmp.${EXT}
@@ -58,15 +59,23 @@ i=1
 while [ $i -lt $FILE_LIMIT ]; do
   i=$(($i * 2))
   
-  /usr/bin/time CBL/target/release/examples/cbl query ${OUT_FOLDER}/${i}.cbl ${FN}
+  /usr/bin/time CBL/target/release/examples/cbl remove ${OUT_FOLDER}/${i}.cbl ${FN} -o ${OUT_FOLDER}/tmp.cbl
   # We need reverse complements for bufboss?
-  /usr/bin/time bufboss/bin/bufboss_query -i ${OUT_FOLDER}/${i}.bufboss -q ${FN} -o /dev/null
-  /usr/bin/time bifrost/build/bin/Bifrost query -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -q ${FN} -o ${OUT_FOLDER}/tmp -t 1
-  /usr/bin/time Buffered_SBWT/search -i ${OUT_FOLDER}/${i}.sbwt ${FN}
+  /usr/bin/time bufboss/bin/bufboss_update -i ${OUT_FOLDER}/${i}.bufboss -d ${FN} -o ${OUT_FOLDER}/tmp.bufboss
+
+  /usr/bin/time Buffered_SBWT/delete -r -t 1 -i ${OUT_FOLDER}/${i}.sbwt -f ${FN} ${OUT_FOLDER}/tmp.sbwt 
+  THREADS=$((MAX_THREADS > 4 ? 4 : MAX_THREADS))
+  echo "threads = ${THREADS}"
+  /usr/bin/time Buffered_SBWT/delete -r -t $THREADS -i ${OUT_FOLDER}/${i}.sbwt -f ${FN} ${OUT_FOLDER}/tmp.sbwt 
+  THREADS=$((MAX_THREADS > 16 ? 16 : MAX_THREADS))
+  echo "threads = ${THREADS}"
+  /usr/bin/time Buffered_SBWT/delete -r -n -m $((MAX_MEM > 4 ? 4 : MAX_MEM)) -t $THREADS -i ${OUT_FOLDER}/${i}.sbwt -f ${FN} ${OUT_FOLDER}/tmp.sbwt 
   echo "threads = ${MAX_THREADS}"
-  /usr/bin/time bifrost/build/bin/Bifrost query -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -q ${FN} -o ${OUT_FOLDER}/tmp -t $MAX_THREADS
+  /usr/bin/time Buffered_SBWT/delete -r -n -m $((MAX_MEM > 30 ? 30 : MAX_MEM)) -t $MAX_THREADS -i ${OUT_FOLDER}/${i}.sbwt -f ${FN} ${OUT_FOLDER}/tmp.sbwt 
+
 
   rm -f ${OUT_FOLDER}/tmp.tsv 
+  rm -rf ${OUT_FOLDER}/tmp.bufboss
 done
 
 rm -f ${OUT_FOLDER}/tmp.${EXT} ${OUT_FOLDER}/tmp.${FEXT}

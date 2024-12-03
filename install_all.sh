@@ -21,9 +21,9 @@ cmake -DCMAKE_BUILD_TYPE="Release" ..
 cd -
 cd ..
 
-#BBB
-cd BBB/build
-cmake .. -DMAX_KMER_LENGTH=31
+#Buffered_SBWT
+cd Buffered_SBWT/sdsl-lite
+cmake CMakelists.txt
 cd -
 
 #CBL apparently with 2 builds since there is no way to just download dependences.
