@@ -15,4 +15,12 @@ module load Singularity
 
 echo "Building unitigs"
 
-singularity run --userns ./ubuntu.sif ./build_expanding.sh fof.txt data unitigs
+cp -r /wrk-vakka/users/saska/CBL_data/data /tmp/
+cp -r /wrk-vakka/users/saska/CBL_data/unitigs /tmp/
+
+singularity run --userns ./ubuntu.sif ./build_expanding.sh fof.txt /tmp/data /tmp/unitigs
+
+rsync -vcr /tmp/unitigs /wrk-vakka/users/saska/CBL_data
+
+rm -vrf /tmp/data
+rm -vrf /tmp/unitigs

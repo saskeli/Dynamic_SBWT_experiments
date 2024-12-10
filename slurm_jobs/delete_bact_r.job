@@ -15,4 +15,12 @@ module load Singularity
 
 echo "deleting rare from bacterial"
 
-singularity run --userns ./ubuntu.sif ./delete_rare.sh fof.txt data concat
+cp -r /wrk-vakka/users/saska/CBL_data/data /tmp/
+cp -r /wrk-vakka/users/saska/CBL_data/concat /tmp/
+
+singularity run --userns ./ubuntu.sif ./delete_rare.sh fof.txt /tmp/data /tmp/concat
+
+rsync -vcr /tmp/concat /wrk-vakka/users/saska/CBL_data
+
+rm -vrf /tmp/data
+rm -vrf /tmp/concat

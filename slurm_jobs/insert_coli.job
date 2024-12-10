@@ -15,4 +15,10 @@ module load Singularity
 
 echo "Inserting e-coli"
 
-singularity run --userns ./ubuntu.sif ./test_insert.sh coli.txt coli3682_dataset coli
+cp -r /wrk-vakka/users/saska/CBL_data/coli3682_dataset /tmp/
+cp -r /wrk-vakka/users/saska/CBL_data/coli /tmp/
+
+singularity run --userns ./ubuntu.sif ./test_insert.sh coli.txt /tmp/coli3682_dataset /tmp/coli
+
+rm -vrf /tmp/coli3682_dataset
+rm -vrf /tmp/coli

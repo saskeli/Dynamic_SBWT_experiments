@@ -15,4 +15,10 @@ module load Singularity
 
 echo "inserting to bacterial"
 
-singularity run --userns ./ubuntu.sif ./test_insert.sh fof.txt data unitigs
+cp -r /wrk-vakka/users/saska/CBL_data/data /tmp/
+cp -r /wrk-vakka/users/saska/CBL_data/unitigs /tmp/
+
+singularity run --userns ./ubuntu.sif ./test_insert.sh fof.txt /tmp/data /tmp/unitigs
+
+rm -vrf /tmp/data
+rm -vrf /tmp/unitigs

@@ -15,4 +15,10 @@ module load Singularity
 
 echo "querying bacterial"
 
-singularity run --userns ./ubuntu.sif ./test_query.sh fof.txt data concat
+cp -r /wrk-vakka/users/saska/CBL_data/data /tmp/
+cp -r /wrk-vakka/users/saska/CBL_data/concat /tmp/
+
+singularity run --userns ./ubuntu.sif ./test_query.sh fof.txt /tmp/data /tmp/concat
+
+rm -vrf /tmp/data
+rm -vrf /tmp/concat
