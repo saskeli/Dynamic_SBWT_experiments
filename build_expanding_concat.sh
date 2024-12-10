@@ -10,7 +10,7 @@ where:
     
 All arguments, besides limit are required
 
-Example $0 fof_build.txt data out"
+Example $0 fof.txt data out"
 
 if [ $# -lt 3 ]; then
     echo "$USAGE"
