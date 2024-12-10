@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#SBATCH --job-name=coli_query
+#SBATCH -c 32
+#SBATCH -n 1
+#SBATCH -t 3:00:00
+#SBATCH --mem=400G
+#SBATCH -M ukko
+#SBATCH -p medium
+#SBATCH --exclusive
+#SBATCH --mail-type=END 
+#SBATCH --mail-user=saska.donges@helsinki.fi
+
+module load Singularity
+
+echo "Inserting e-coli"
+
+singularity run --userns ./ubuntu.sif ./test_query.sh q_coli.txt coli3682_dataset coli

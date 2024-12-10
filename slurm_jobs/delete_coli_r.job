@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#SBATCH --job-name=coli_delete_r
+#SBATCH -c 32
+#SBATCH -n 1
+#SBATCH -t 3:00:00
+#SBATCH --mem=400G
+#SBATCH -M ukko
+#SBATCH -p medium
+#SBATCH --exclusive
+#SBATCH --mail-type=END 
+#SBATCH --mail-user=saska.donges@helsinki.fi
+
+module load Singularity
+
+echo "Deleting rare e-coli"
+
+singularity run --userns ./ubuntu.sif ./delete_rare.sh coli.txt coli3682_dataset coli
