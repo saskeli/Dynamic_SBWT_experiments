@@ -3,7 +3,7 @@
 #SBATCH --job-name=bacterial_delete_r
 #SBATCH -c 32
 #SBATCH -n 1
-#SBATCH -t 12:00:00
+#SBATCH -t 24:00:00
 #SBATCH --mem=400G
 #SBATCH -M ukko
 #SBATCH -p medium
