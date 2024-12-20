@@ -60,7 +60,7 @@ while [ $i -lt $FILE_LIMIT ]; do
   fi
 
   /usr/bin/time CBL/target/release/examples/cbl insert ${OUT_FOLDER}/${i}.cbl ${FN} -o ${OUT_FOLDER}/tmp.cbl  
-  /usr/bin/time bifrost/build/bin/Bifrost update -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -r ${FN} -o ${OUT_FOLDER}/tmp.bifrost -t 1
+  /usr/bin/time bifrost/build/bin/Bifrost update -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -I ${OUT_FOLDER}/${i}.bifrost.bfi -r ${FN} -o ${OUT_FOLDER}/tmp.bifrost -t 1
   /usr/bin/time Buffered_SBWT/build -r -t 1 -i ${OUT_FOLDER}/${i}.sbwt -f ${FN} ${OUT_FOLDER}/tmp.sbwt 
   THREADS=$((MAX_THREADS > 4 ? 4 : MAX_THREADS))
   echo "threads = ${THREADS}"
@@ -69,7 +69,7 @@ while [ $i -lt $FILE_LIMIT ]; do
   echo "threads = ${THREADS}"
   /usr/bin/time Buffered_SBWT/build -r -n -m $((MAX_MEM > 4 ? 4 : MAX_MEM)) -t $THREADS -i ${OUT_FOLDER}/${i}.sbwt -f ${FN} ${OUT_FOLDER}/tmp.sbwt 
   echo "threads = ${MAX_THREADS}"
-  /usr/bin/time bifrost/build/bin/Bifrost build -r ${FN} -o ${OUT_FOLDER}/${i}.bifrost -k 31 -t $MAX_THREADS
+  /usr/bin/time bifrost/build/bin/Bifrost update -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -I ${OUT_FOLDER}/${i}.bifrost.bfi -r ${FN} -o ${OUT_FOLDER}/tmp.bifrost -t $MAX_THREADS
   /usr/bin/time Buffered_SBWT/build -r -n -m $((MAX_MEM > 30 ? 30 : MAX_MEM)) -t $MAX_THREADS -i ${OUT_FOLDER}/${i}.sbwt -f ${FN} ${OUT_FOLDER}/tmp.sbwt 
 
   rm -f ${OUT_FOLDER}/tmp.${FEXT} ${OUT_FOLDER}/tmp.${EXT} ${OUT_FOLDER}/tmp.cbl 

@@ -61,10 +61,10 @@ while [ $i -lt $FILE_LIMIT ]; do
   /usr/bin/time CBL/target/release/examples/cbl query ${OUT_FOLDER}/${i}.cbl ${FN}
   # We need reverse complements for bufboss?
   /usr/bin/time bufboss/bin/bufboss_query -i ${OUT_FOLDER}/${i}.bufboss -q ${FN} -o /dev/null
-  /usr/bin/time bifrost/build/bin/Bifrost query -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -q ${FN} -o ${OUT_FOLDER}/tmp -t 1
+  /usr/bin/time bifrost/build/bin/Bifrost query -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -I ${OUT_FOLDER}/${i}.bifrost.bfi -q ${FN} -o ${OUT_FOLDER}/tmp -p -t 1
   /usr/bin/time Buffered_SBWT/search -i ${OUT_FOLDER}/${i}.sbwt ${FN}
   echo "threads = ${MAX_THREADS}"
-  /usr/bin/time bifrost/build/bin/Bifrost query -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -q ${FN} -o ${OUT_FOLDER}/tmp -t $MAX_THREADS
+  /usr/bin/time bifrost/build/bin/Bifrost query -g ${OUT_FOLDER}/${i}.bifrost.gfa.gz -I ${OUT_FOLDER}/${i}.bifrost.bfi -q ${FN} -o ${OUT_FOLDER}/tmp -p -t $MAX_THREADS
 
   rm -f ${OUT_FOLDER}/tmp.tsv 
 done
