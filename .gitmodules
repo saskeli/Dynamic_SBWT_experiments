@@ -1,9 +1,9 @@
 [submodule "bifrost"]
 	path = bifrost
-	url = https://github.com/pmelsted/bifrost.git
+	url = https://github.com/saskeli/bifrost.git
 [submodule "CBL"]
 	path = CBL
-	url = https://github.com/imartayan/CBL.git
+	url = https://github.com/saskeli/CBL.git
 [submodule "bufboss"]
 	path = bufboss
 	url = https://github.com/jnalanko/bufboss.git
@@ -12,4 +12,4 @@
 	url = https://github.com/GATB/bcalm.git
 [submodule "Buffered_SBWT"]
 	path = Buffered_SBWT
-	url = git@github.com:saskeli/Buffered_SBWT.git
+	url = https://github.com/saskeli/Buffered_SBWT.git
