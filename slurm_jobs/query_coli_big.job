@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#SBATCH --job-name=coli_q_big
+#SBATCH -c 32
+#SBATCH -n 1
+#SBATCH -t 24:00:00
+#SBATCH --mem=400G
+#SBATCH -M ukko
+#SBATCH -p medium
+#SBATCH --exclusive
+#SBATCH --mail-type=END 
+#SBATCH --mail-user=saska.donges@helsinki.fi
+
+module load Singularity
+
+echo "Quierying e-coli"
+
+cp -r /wrk-vakka/users/saska/CBL_data/coli3682_dataset /tmp/
+cp -r /wrk-vakka/users/saska/CBL_data/coli /tmp/
+
+singularity run --userns ./ubuntu.sif ./test_query_big.sh coli.txt /tmp/coli3682_dataset /tmp/coli
+
+rm -vrf /tmp/coli3682_dataset
+rm -vrf /tmp/coli

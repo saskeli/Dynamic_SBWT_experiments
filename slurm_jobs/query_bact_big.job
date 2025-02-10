@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#SBATCH --job-name=bact_q_big
+#SBATCH -c 32
+#SBATCH -n 1
+#SBATCH -t 36:00:00
+#SBATCH --mem=400G
+#SBATCH -M ukko
+#SBATCH -p medium
+#SBATCH --exclusive
+#SBATCH --mail-type=END 
+#SBATCH --mail-user=saska.donges@helsinki.fi
+
+module load Singularity
+
+echo "querying bacterial"
+
+cp -r /wrk-vakka/users/saska/CBL_data/data /tmp/
+cp -r /wrk-vakka/users/saska/CBL_data/concat /tmp/
+
+singularity run --userns ./ubuntu.sif ./test_query_big.sh fof.txt /tmp/data /tmp/concat
+
+rm -vrf /tmp/data
+rm -vrf /tmp/concat
